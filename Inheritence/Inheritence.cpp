@@ -1,7 +1,7 @@
 // Inheritence.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include <iostream>
+//#include <iostream>
 
 /*Example 1 */
 //class person
@@ -120,67 +120,72 @@
 
 /* Example */
 
-#include <iostream>
-#include <string>
-using namespace std;
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//
+//class fruit
+//{
+//	std::string m_strname;
+//	std::string m_strcolor;
+//
+//public:
+//	fruit(std::string strname = "", std::string strcolor = "") :m_strname{ strname }, m_strcolor{ strcolor }
+//	{
+//
+//	}
+//
+//	const std::string getName() const { return m_strname; }
+//	const std::string getcolor() const { return m_strcolor; }
+//};
+//
+//class Apple : public fruit
+//{
+//	double m_dfiber;
+//public:
+//	Apple()
+//	{
+//		std::cout << "Apple constructor : " << std::endl;
+//	}
+//
+//	Apple(std::string strname, std::string strcolor, double dfiber) :fruit{ strname, strcolor },m_dfiber { dfiber }{ }
+//
+//	const std::string print() const
+//	{
+//		return "Apple("+ getName() + "," + getcolor() + ","+to_string(m_dfiber) + ")";
+//	}
+//};
+//
+//class Banana : public fruit
+//{
+//public:
+//	Banana()
+//	{
+//		std::cout << "banana constructor : " << std::endl;
+//	}
+//	Banana(std::string strname,std::string strcolor):fruit{strname, strcolor}
+//	{
+//
+//	}
+//
+//	const std::string print() const
+//	{
+//		return "Banana("+ getName()+ "," + getcolor() + ")";
+//	}
+//};
+//
+//int main()
+//{
+//	const Apple a{ "Red delicious", "red", 4.2 };
+//	std::cout << a.print().c_str() << '\n';
+//
+//	const Banana b{ "Cavendish", "yellow" };
+//	std::cout << b.print().c_str() << '\n';
+//
+//	return 0;
+//}
 
-class fruit
-{
-	std::string m_strname;
-	std::string m_strcolor;
+/* 
+**************Calling inherited functions and overriding**************
 
-public:
-	fruit(std::string strname = "", std::string strcolor = "") :m_strname{ strname }, m_strcolor{ strcolor }
-	{
-
-	}
-
-	const std::string getName() const { return m_strname; }
-	const std::string getcolor() const { return m_strcolor; }
-};
-
-class Apple : public fruit
-{
-	double m_dfiber;
-public:
-	Apple()
-	{
-		std::cout << "Apple constructor : " << std::endl;
-	}
-
-	Apple(std::string strname, std::string strcolor, double dfiber) :fruit{ strname, strcolor },m_dfiber { dfiber }{ }
-
-	const std::string print() const
-	{
-		return "Apple("+ getName() + "," + getcolor() + ","+to_string(m_dfiber) + ")";
-	}
-};
-
-class Banana : public fruit
-{
-public:
-	Banana()
-	{
-		std::cout << "banana constructor : " << std::endl;
-	}
-	Banana(std::string strname,std::string strcolor):fruit{strname, strcolor}
-	{
-
-	}
-
-	const std::string print() const
-	{
-		return "Banana("+ getName()+ "," + getcolor() + ")";
-	}
-};
-
-int main()
-{
-	const Apple a{ "Red delicious", "red", 4.2 };
-	std::cout << a.print().c_str() << '\n';
-
-	const Banana b{ "Cavendish", "yellow" };
-	std::cout << b.print().c_str() << '\n';
-
-	return 0;
-}
+*/
