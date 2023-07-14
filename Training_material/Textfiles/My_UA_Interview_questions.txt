@@ -1,0 +1,56 @@
+Miguel caro
+
+1) How to select STL algorithms and how to suitable for your data?
+2) If you are working with 1 million data. what STL algorithm will you prefer?
+3) why you prefer array not list?
+4) when you use list or vector?
+5) If you store data in sequential are you get any advantage?
+6) what is space and time complexity between unordered map and ordered map?
+7) all time ordered map time complexity always O(n*logn)?
+8) what is hash colision?
+9) do you use smart pointer?
+10) what is issue in shared_ptr?
+11) what type of synchronization techniques?
+12) How to debug a dead lock?
+13) How to get dead lock with single mutex?
+14) what are systamatic approach to code review?
+15) how to think unit test cases useful and what is advantage on legacy code?
+16) what is legacy code?
+17) what is the difference between unit test and integration test and sytem level test?
+18) what is difference stub and mock?
+
+
+cscaba
+-------------
+
+19) Exaplin about polymorphism?
+20) what stl containers?
+21) what is advantage compile time polymorphism and runtime polymoriphm?
+22) what are templates doesn't have disadvantages?
+23) Explain the stack unwinding process?
+24) what happend allocator memory in the process of stack unwinding?
+25) using try and catch blocks any permornance impact?
+26) what happend we not get any exception then impact on performancance?
+27) Exaplin memory layout process?
+30) what is difference between process?
+31)  how to use the memory in process and thread?
+
+
+Alaksinder?
+
+28) where store the local variables?
+29) if we have multiple threads allocate local varible?
+32) what the difference between L2 and L3 position?
+33) what is features you like in c++17?
+34) what you ensure to increase the product quality?
+35) what is adavantage CI?
+36) what task to run in the CI?
+37) How to give efforts?
+38) How to allocate the task to team member and allocate the efforts?
+ 
+
+
+
+
+
+

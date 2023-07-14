@@ -1,0 +1,16 @@
+26) compile time polymorphism vs Runtime polymorphism which better for performance ?
+
+27) How many threads can create single core machine ?
+
+    maximum : 2 to 3
+	
+28) map O(log n) unorder_map O(1) 
+
+
+29) Agile methdologies
+30) what is the process do you following in your project?
+31) story points vs time tracking.
+32) Multithreading Techniques for synchronization?
+33) smart pointers 
+34) unit testing ?
+35) 

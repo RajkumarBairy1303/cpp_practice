@@ -1,0 +1,438 @@
+Interview Questions:
+
+Pointers concepts;
+
+1) #include <iostream>
+using namespace std;
+
+int main()
+{
+    char *str = "abcdefgh";
+    short *s = (short*)(str);   
+    cout<<*(s+2)<<endl;
+    return 0;
+}
+
+
+2) structural padding
+
+#include <iostream>
+using namespace std;
+struct Base
+{
+	double a;
+	char b;
+	int c;
+	char d;
+};
+int main()
+{
+	cout<<sizeof(Base)<<endl;
+	return 0;
+}
+
+Answer : 24
+
+#include <iostream>
+using namespace std;
+
+class sample
+{
+   public:
+   virtual void test() { }
+};
+int main()
+{
+    std::cout<<sizeof(sample)<<endl;
+    return 0;
+}
+
+
+
+3) what is the output of the below program?
+
+#include<iostream>
+using namespace std;
+
+class Test
+{
+    int *ptr;
+public:
+    Test (int i = 0)      { ptr = new int(i); }
+    void setValue (int i) { *ptr = i; }
+    void print()          { cout << *ptr << endl; }
+};
+  
+int main()
+{
+    Test t1(5);
+    Test t2 = t1;
+    t1.setValue(10);
+    t1.print();
+    t2.print();
+    return 0;
+}
+
+4) #include <iostream>
+using namespace std;
+ 
+class Test
+{
+    static int x;
+public:
+    Test() = default;
+    Test(const Test& obj){x++;}
+    static int getX() {return x;}
+};
+ 
+int Test::x = 0;
+Test fun()
+{
+    Test t;
+    return t;
+}
+int main()
+{
+    Test obj = fun();
+    cout<<Test::getX()<<endl;
+    return 0;
+}
+
+5) class DBConnectionError {...}
+ 
+class DBConnection
+{
+public:
+    DBConnection(const std::string& connection_string) : db_handle(NULL), buffer(new char[256])
+    {
+        ...
+        int result = connect(connection_string.c_str(), &db_handle);
+        if (!result)
+        {
+             throw DBConnectionError(connection_string);
+        }
+        ....
+    }
+ 
+    ~DBConnection()
+    {
+        ...
+        int result = disconnect(db_handle);
+        if (!result)
+        {
+             throw DBConnectionError("some meaningful message");
+        }
+        else db_handle = NULL;
+        ....
+ 
+        delete[] buffer;
+    }
+ 
+    void query_execute(const std::string& query_string) {...}
+ 
+private:
+    void* db_handle;
+    char* buffer;
+}
+
+
+6)
+
+#include <cstdio>
+#include <cstdlib>
+ 
+bool foo()
+{
+  return (bool)(rand() % 2);
+}
+ 
+int main()
+{
+  FILE* fp = std::fopen("test.txt", "r");
+  if(!fp) {
+    std::perror("File opening failed");
+    return EXIT_FAILURE;
+  }
+ 
+  if(!foo())
+    return EXIT_FAILURE;
+ 
+  std::fclose(fp);
+}
+
+
+7) vector concepts
+
+#include <vector>
+#include <iostream>
+ 
+int main()
+{
+   std::vector<int> v;
+   v.reserve(30);
+   v[15] = 10;
+   std::cout << "size: " << v.size() << '\n';
+}
+
+
+8)
+
+#include <iostream>
+#include <thread>
+#include <vector>
+#include <mutex>
+using namespace std;
+class Singleton 
+{
+    private:
+    static Singleton *instance;
+    int data;
+    static std::mutex mtx;
+    protected:
+    Singleton() 
+    {
+       data = 0;
+       cout<<"inside constructor : "<<endl;
+    }
+    public:
+    static Singleton *getInstance() 
+    {
+        mtx.lock();
+        if (instance==0)
+        {instance = new Singleton;}
+        mtx.unlock();
+        return instance;
+    }
+    int getData() {return this -> data;}
+    void setData(int data) {this -> data = data;}
+};
+Singleton *Singleton::instance = 0;
+std::mutex Singleton::mtx;
+int main()
+{
+ 
+ std::vector<std::thread> thVec;
+ for(int i = 0 ; i < 5; i++)
+ {
+     thVec.push_back(std::thread(Singleton::getInstance));
+ }
+   
+ for(int i = 0 ; i < 5; i++) 
+  thVec[i].join();
+ return 0;
+}
+
+9)
+
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <iostream>
+using namespace std;
+
+class B;
+
+class A
+{
+    private:
+    friend class B;
+    int _num;
+};
+
+class B
+{
+    public:
+    void fun()
+    {
+        A a;
+        cout<<a._num<<endl;
+        a._num = 10;
+        cout<<a._num<<endl;
+    }
+};
+
+class C:public B
+{
+    public:
+    void fun()
+    {
+        A a;
+        cout<<a._num<<endl;
+        a._num = 10;
+        cout<<a._num<<endl;
+    }
+};
+int main()
+{
+    B b;
+    b.fun();
+    C c;
+    c.func();
+    return 0;
+}
+
+Ans:
+
+0
+10
+
+10) 
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <iostream>
+using namespace std;
+
+class A
+{
+  public:
+  void fun()
+  {
+      cout<<"A::fun :"<<endl;
+  }
+};
+class B: public A
+{
+  public:
+  void fun()
+  {
+      cout<<"B::fun :"<<endl;
+  }
+};
+
+class C: public B
+{
+  public:
+  virtual void fun()
+  {
+      cout<<"C::fun :"<<endl;
+  }
+};
+
+class D: public C
+{
+  public:
+  void fun() override
+  {
+      cout<<"D::fun :"<<endl;
+  }
+};
+
+int main()
+{
+    D d;
+    
+    A &a = d;
+    a.fun();
+    
+    B &b = d;
+    b.fun();
+    
+    C &c = d;
+    c.fun();
+    
+    d.fun();
+    
+    return 0;
+}
+
+Ans :
+
+A::fun :
+B::fun :
+D::fun :
+D::fun :
+
+
+11) checking mutable storage
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <iostream>
+using namespace std;
+
+class A
+{
+  mutable int _num { };
+  public:
+  
+  void setNum(int num) const {_num = num; }
+  
+  int getNum() const noexcept { return _num; }
+};
+
+int main()
+{
+    A a;
+    cout<<a.getNum()<<endl;
+    a.setNum(10);
+    cout<<a.getNum()<<endl;
+    
+    return 0;
+}
+
+output:
+
+0 
+10
+
+1) check the shared_ptr cycle reference issue.
+
+#include <iostream>
+#include <memory> 
+#include <string>
+
+class Person
+{
+	std::string m_name;
+	std::shared_ptr<Person> m_partner; // change this line as std::weak_ptr<Person> m_partner;
+
+public:
+
+	Person(const std::string &name): m_name(name)
+	{
+		std::cout << m_name << " created\n";
+	}
+	~Person()
+	{
+		std::cout << m_name << " destroyed\n";
+	}
+
+	friend bool partnerUp(std::shared_ptr<Person> &p1, std::shared_ptr<Person> &p2)
+	{
+		if (!p1 || !p2)
+			return false;
+
+		p1->m_partner = p2;
+		p2->m_partner = p1;
+
+		std::cout << p1->m_name << " is now partnered with " << p2->m_name << '\n';
+
+		return true;
+	}
+};
+
+int main()
+{
+	auto lucy { std::make_shared<Person>("Lucy") }; 
+	auto ricky { std::make_shared<Person>("Ricky") }; 
+
+	partnerUp(lucy, ricky); 
+
+	return 0;
+}

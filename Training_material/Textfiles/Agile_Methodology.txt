@@ -1,0 +1,49 @@
+
+1) what is Agile ?
+ 
+   Agile is a value driven approach to developing solutions.It is focused on people, adaptability and providing maximum value to customers.
+   
+      
+2) what are Elements of Agile Methodology?
+
+   The Agile philosophy emphasizes quick releases, flexible planning, sustainable development, continuous attention to good design, and ongoing feedback from users. Agility empowers the team to experiment and adapt to change quickly.
+   
+3) what is agile mindset ?
+
+   The Agile mindset—a set of attitudes and ways of thinking that support Agile practices—enables independence, creativity, and innovation.
+   
+   i)  Put Customer's first : Delivering value to customers rather than prioritizing shareholders and generating revenue.
+   ii) Trust in team : Team members with an Agile mindset value autonomy and are comfortable working in a self-managed team. They can work independently
+       and get their work done with little direct supervision.
+   iii) Emphasize Expermentation : With an Agile mindset, people value creativity and look for opportunities to experiment and innovate. Team members
+		with this mindset encourage the people around them to do the same. Engaging in experimentation means taking risks, which can lead to unique solutions and valuable outcomes.
+		
+4) what are the Agile Values ?
+
+    i) Individuals and interactions over processes and tools:
+        The team—and their ability to communicate efficiently—is more valuable than the processes they follow or the tools they use.
+	 
+	ii) Working software over comprehensive documentation : 
+	    One of the values of Agile is to deliver working software—not documentation—into the customer's hands as quickly as possible. Early delivery of the working software helps get early feedback from the customer.
+		
+	iii) Customer collaboration over contract negotiation : 
+	     Agile emphasizes customer-centric product development in which a customer feedback loop is built into the development lifecycle. Continuous collaboration with customers helps ensure the delivery of effective and valuable solutions. For example, high-level goals are emphasized in contracts rather than detailed lists of requirements.
+		 
+	iv) Responding to change over following a plan : 
+	    Good Agile practices encourage regular evaluation and retooling of current plans based on new information, which is constantly gathered and analyzed. The product roadmap is not considered a static document but a dynamic strategy that allows the team to adjust its priorities and plans
+		
+5) Agile principles ?
+
+     i)     Our highest priority is to satisfy the customer through early and continuous delivery of valuable software.
+     ii)    Welcome changing requirements, even late in development. Agile processes harness change for the customer’s competitive advantage.
+	 iii)	Deliver working software frequently, from a couple of weeks to a couple of months, with a preference to the shorter timescale.
+	 iv)	Businesspeople and developers must work together daily throughout the project.
+	  v)	Build projects around motivated individuals. Give them the environment and support they need, and trust them to get the job done.
+	 vi)	The most efficient and effective method of conveying information to and within a development team is face-to-face conversation.
+	vii)	Working software is the primary measure of progress.
+	viii)	Agile processes promote sustainable development. The sponsors, developers, and users should be able to maintain a constant pace 
+ 	        indefinitely.
+	ix)     Continuous attention to technical excellence and good design enhances agility.
+	 x)     Simplicity—the art of maximizing the amount of work not done—is essential.
+	xi)     The best architectures, requirements, and designs emerge from self-organizing teams.
+	xii)    At regular intervals, the team reflects on how to become more effective, then tunes and adjusts its behavior accordingly.

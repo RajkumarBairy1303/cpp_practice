@@ -1,0 +1,143 @@
+
+1) Difference between List and map ?
+2) Explain about the complexity of map ?
+3) what data structure used to implement the map?
+4) what is binary tree ?
+
+c++ code security ?
+
+char *p = new char[50];
+sprintf(fp, "%s", some_user_data);
+
+6) what is RAII(Resource Aquasition is initialization) ?
+
+7) Exaplain about smart pointers ?
+
+8) Exaplin about weak pointer ?
+
+9) what is the exception safety ? 
+
+10) int f()
+    {
+	   int *p = NULL;
+	   try
+	   {
+	     p = new int[N];
+	   }
+	   catch(exception ...)
+	   {
+	      delete[]p;
+		  throw E;
+	   }
+	   
+	   delete []p;
+	   
+	}
+	
+	
+11) could you tell me about types of polymorphism ?
+
+12) what is the difference between compile time and run time polymorphism ?
+
+13) what is function overloading ?
+
+14) what is Rvalue reference ?
+
+15) what are type systems in c++ type casting technique ?
+
+16) How to check pointer base or pointer derived class ? using typeid can check the pointer points base class or derived class ?
+
+17) why we need to use c++ type casting ?
+
+18) can we have uninitialized references ?
+
+19) difference between const , define , constexpr ?
+
+20) allocation of const and macro in binary file ?
+
+21) could you please explain the steps from source to binary file?
+
+22) which techniques are reduce the compile time ?
+
+23) what is PIMPL?
+
+24) how to choose which STL container should use ?
+
+25) STL containers Memory layout ?
+
+26) what is the vector ?
+
+27) what is the difference between size and capacity ?
+
+28) what is unordered map vs map?
+
+29) what kind of data structure behind the unordered map?
+
+30) what preferable way use multiple process or multiple threads ?
+
+31) what is security ?
+
+32) what happen if one thread crash inside the process ?
+
+33) what kind of synchronization machanism you know?
+
+34) what are technique to prevent the dead locks ?
+
+35) what things must verify the during code review ?
+
+36) coding guidline or conventions ?
+
+37) do you know the abbrivation of F.I.R.S.T principle ?
+
+38) why we need execution of unit test cases fast ?
+
+39) why unit test cases could be repetable and independent ?
+
+40) what happend of one unit test case relay on other unit test case ?
+
+41) can we use new set of data or same set of data for unit test case ?
+
+42) why we need software development model or why we need scrum ?
+
+43) Difference between waterfall and agile or any other model ?
+
+44) can we consider one scrum cycle as waterfall model ?
+
+45) any special technique to declare effors estimations ?
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

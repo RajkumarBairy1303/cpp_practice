@@ -1,0 +1,725 @@
+Multithreading
+
+1) What do you undestand by thread and give one example in c++?
+
+   In every application there is a default thread which is main(), in side this we create other threads.
+   
+   A thread is also known as lightweight process. Idea is achieve parallelism by diving a process into multiple threads.
+   
+   
+
+1) what std::thread accepts in constructor ?
+
+   We can attach a callback with the std::thread object, that will be executed when this new thread starts. These callbacks can be,
+
+	 i)  Function Pointer
+	 ii) Function Objects
+	iii) Lambda functions
+	
+2) Creating a thread using Function Pointer ?
+
+    #include <iostream>
+	#include <thread>
+	 
+	void thread_function()
+	{
+		for(int i = 0; i < 10000; i++);
+			std::cout<<"thread function Executing"<<std::endl;
+	}
+	 
+	int main()  
+	{
+		
+		std::thread threadObj(thread_function);
+		for(int i = 0; i < 10000; i++);
+			std::cout<<"Display From MainThread"<<std::endl;
+		threadObj.join();    
+		std::cout<<"Exit of Main function"<<std::endl;
+		return 0;
+	}
+	
+3) Creating a thread using Function Objects ?
+
+    #include <iostream>
+	#include <thread>
+	class DisplayThread
+	{
+	public:
+		void operator()()     
+		{
+			for(int i = 0; i < 10000; i++)
+				std::cout<<"Display Thread Executing"<<std::endl;
+		}
+	};
+	 
+	int main()  
+	{
+		std::thread threadObj( (DisplayThread()) );
+		for(int i = 0; i < 10000; i++)
+			std::cout<<"Display From Main Thread "<<std::endl;
+		std::cout<<"Waiting For Thread to complete"<<std::endl;
+		threadObj.join();
+		std::cout<<"Exiting from Main Thread"<<std::endl;
+		return 0;
+	}
+	
+4) Creating a thread using Lambda functions ? 
+
+	#include <iostream>
+	#include <thread>
+	int main()  
+	{
+		int x = 9;
+		std::thread threadObj([]{
+				for(int i = 0; i < 10000; i++)
+					std::cout<<"Display Thread Executing"<<std::endl;
+				});
+				
+		for(int i = 0; i < 10000; i++)
+			std::cout<<"Display From Main Thread"<<std::endl;
+			
+		threadObj.join();
+		std::cout<<"Exiting from Main Thread"<<std::endl;
+		return 0;
+	}
+	
+5) what is std::thread join ?
+
+    Once a thread is started then another thread can wait for this new thread to finish.For this another need to call join function.
+	
+6) What is thread using std::thread::detch?
+
+   Detached threads are also called deamon/Background threads. To detach a thread we need to call std::detach() function
+   
+   Be careful with calling detach() and join() on Thread Handles:
+   
+   case 1: Never call join() or detach() on std::thread object with no associated executing method.
+   
+     Example:
+	 std::thread threadObj((workerThread()));
+	 threadaobj.join();
+	 threadobj.join(); //It will cause program to terminate
+	 
+	Case 2 : Never forget to call either join or detach on a std::thread object with associated executing thread
+ 
+7) Passing simple arguments to std::thread in c++11?
+
+    #include <iostream>
+	#include <string>
+	#include <thread>
+	
+	void threadfunction(int x, std::string str)
+	{
+	  std::cout<<"Passed Number = "<<x<<std::endl;
+	  std::cout<<"Passed string = "<<str<<std::endl;
+	}
+	int main()
+	{
+	  int x = 10;
+	  std::string str = "simple string ";
+	  std::thread threadobj(threadfunction, x, str);
+	  threadObj.join();
+	  return 0;
+	}
+	
+8) How not to pass arguments to threads in C++11 ?
+
+   Don't pass the address of variables from local stack to thread's callback function. because it might be possible that local variable in thread1 goes out of scope but thread2 is still trying to access it through it's address.
+   
+   #include <iostream>
+	#include <thread>
+	using namespace std;
+
+	using time1  = std::chrono::milliseconds;
+	//using Tsleep = std::this_thread::sleep_for;
+	void threadfunction(int *p)
+	{
+		cout<<"inside thread function Id : "<<*p<<endl;
+		time1 dura(1000);
+		std::this_thread::sleep_for(dura);
+		*p = 20;
+	}
+
+	void createThread()
+	{
+		int val = 10;
+		std::cout<<"inside createThread : i = "<<val<<endl;
+		
+		std::thread th(threadfunction, &val);
+		if(th.joinable())
+		  th.detach(); // here detached the thread means this thread will not wait for another thread
+		
+		std::cout<<"inside createThread : i = "<<val<<endl;
+	   
+	}
+	int main()
+	{
+		createThread();
+		time1 tm(1000);
+	   std::this_thread::sleep_for(tm);
+		cout<<"Exit from main : "<<endl;
+		return 0;
+	}
+
+9)How to pass references to std::thread in C++11?
+
+  #include <iostream>
+	#include <thread>
+	using namespace std;
+	void threadfunction(const int &p)
+	{
+		int &y = const_cast<int&>(p);
+		y++;
+		
+		cout<<"Inside the thread function : "<<y<<endl;
+	}
+
+	int main()
+	{
+		int x = 9;
+		std::cout<<"inside main function : "<<x<<endl;
+		//std::thread th(threadfunction,x); // 
+		std::thread th(threadfunction,std::ref(x)); // 
+		if(th.joinable())
+		 th.join();
+		 
+		std::cout<<"Inside the main function : "<<x<<endl;
+		
+		return 0;
+	}
+	
+	Even if threadCallback accepts arguments as reference but still changes done it are not visible outside the thread.
+	Its because x in the thread function threadCallback is reference to the temporary value copied at the new thread’s stack.
+	
+	How to fix this ?
+
+    Using std::ref() 
+	
+	
+10) How to assigning pointer to member function of a class as thread function?
+
+     #include <iostream>
+	#include <thread>
+	using namespace std;
+	class sample
+	{
+		public:
+		sample() = default;
+		sample(const sample& obj) = default;
+		
+		void print(int &x)
+		{
+			x++;
+			cout<<"Print : "<<x<<endl;
+		}
+	};
+	int main()
+	{
+		int x = 9;
+		sample obj;
+		std::cout<<"inside main function : "<<x<<endl;
+		std::thread th(&sample::print,&obj,std::ref(x)); // 
+		if(th.joinable())
+		 th.join();
+		 
+		std::cout<<"Inside the main function : "<<x<<endl;
+		
+		return 0;
+	}
+	
+	
+11) what is Race condition?
+
+     Race condition is a kind of a bug that occurs in multithreaded applications.
+
+     When two or more threads perform a set operations in parllel, that access the same memory location. Also, one or more thread out of then modifies the data in that memory location, then this can lead to an unexpected results some times.
+
+12) How to fix the Race condition ?
+   
+     To fix the race condition problem we need to use the lock mechanism i.e each thread need to acquire a lock before modifying or reading the shared data and after modifying the data each thread should unlock the lock.
+
+13) what is mutex ?
+
+     we can fix the race condition by using mutex lock while thread accessing the memory once complete the accessing then unlock the lock then other thread can access the same data. but if forgot to unlock the mutex lock then other threads will remain in waiting.
+
+     This kind of scanrio can happen is case some exception came after locking the mutex. To avoid such scenarios we should use std::lock_guard.
+	 
+13) what mutex try lock ?
+
+     i)  try_lock() tries to lock the mutex. Returns immediately. On successful lock acquisition return true otherwise returns false.
+	 
+	 ii) If try_lock() is not able to lock mutex, then it doesn't get blocked that's why it is called non-blocking.
+	 
+	 iii) If try_lock is called again by the same thread which owns the mutex, the behavIor is undefined. It is a dead lock situation with undefined behaviour. 
+	 
+	 Note : If you want to be able to lock the same mutex by same thread more than one time then go for recursive_mutex.
+	 
+	 Example :
+	    #include <iostream>
+		#include <thread>
+		#include <mutex>
+
+		int counter = 0;
+		std::mutex mut;
+
+		void increasethecounter()
+		{
+			for(int i = 0 ; i < 100000; i++)
+			{
+				if(mut.try_lock())
+				{
+					counter++;
+				}
+				
+				mut.unlock();
+			}
+		}
+
+		int main()
+		{
+			std::thread th(&increasethecounter);
+			std::thread th1(&increasethecounter);
+			th1.join();
+			th.join();
+			std::cout<<"counter value : "<<counter<<std::endl;
+			return 0;
+		}
+
+
+13) what is std::try_lock() in c++11?
+
+    i)  std::try_lock() tries to lock all the lockable objects passed in it one by one in given order.
+
+        syntax : std::try_lock(m1,m2,m3,m4,...,mn);
+    ii)  On success this function returns -1 otherwise it will return 0- based mutex index number which it could not lock.
+
+    iii) If it fails to lock any of the mutex then it will release all the mutex it locked before.
+
+    iv) If a call to try_lock results in an exception, unlock is called for any locked objects before rethrowing.
+
+13) what is Timed mutex in c++?
+
+    i) std::timed_mutex	is blocked till timeout_time or the lock is aquired and returns true if success otherwise false.
+
+13) what is recursive mutex in c++?
+
+     It is same as mutex but, same thread can lock one mutex multiple times using recursive mutex.
+	 
+	 
+
+14) what is std::lock_guard ?
+
+    It wraps the mutex inside the it's object and locks the attached mutex in constructor. when it's destructor is called it release the mutex.	 
+	
+	
+	Example:
+	class Wallet
+	{
+		int mMoney;
+		std::mutex mutex;
+	public:
+		Wallet() :mMoney(0){}
+		int getMoney()   {     return mMoney; }
+		void addMoney(int money)
+		{
+			std::lock_guard<std::mutex> lockGuard(mutex);
+			// In constructor it locks the mutex
+			for(int i = 0; i < money; ++i)
+			{
+				// If some exception occurs at this
+				// poin then destructor of lockGuard
+				// will be called due to stack unwinding.
+				//
+				mMoney++;
+			}
+			// Once function exits, then destructor
+			// of lockGuard Object will be called.
+			// In destructor it unlocks the mutex.
+		}
+	 };
+	
+15) what is condition variables ?
+
+    Condition variable is a kind event used for signaling between 2 threads. one thread can wait for it to get signaled, while other thread can signal this.
+
+    #include <condition_variable>	
+	
+	#include <iostream>
+	#include <thread>
+	#include <functional>
+	#include <mutex>
+	#include <condition_variable>
+	using namespace std::placeholders;
+	class Application
+	{
+	  std::mutex m_mutex;
+	  std::condition_variable m_condVar;
+	  bool m_bDataLoaded;
+	public:
+	  Application()
+	  {
+		m_bDataLoaded = false;
+	  }
+	  void loadData()
+	  {
+	   // Make This Thread sleep for 1 Second
+	   std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	   std::cout<<"Loading Data from XML"<<std::endl;
+	   // Lock The Data structure
+	   std::lock_guard<std::mutex> guard(m_mutex);
+	   // Set the flag to true, means data is loaded
+	   m_bDataLoaded = true;
+	   // Notify the condition variable
+	   m_condVar.notify_one();
+	  }
+	  bool isDataLoaded()
+	  {
+		return m_bDataLoaded;
+	  }
+	  void mainTask()
+	  {
+		std::cout<<"Do Some Handshaking"<<std::endl;
+		// Acquire the lock
+		std::unique_lock<std::mutex> mlock(m_mutex);
+		// Start waiting for the Condition Variable to get signaled
+		// Wait() will internally release the lock and make the thread to block
+		// As soon as condition variable get signaled, resume the thread and
+		// again acquire the lock. Then check if condition is met or not
+		// If condition is met then continue else again go in wait.
+		m_condVar.wait(mlock, std::bind(&Application::isDataLoaded, this));
+		std::cout<<"Do Processing On loaded Data"<<std::endl;
+	  }
+	};
+	int main()
+	{
+	   Application app;
+	   std::thread thread_1(&Application::mainTask, &app);
+	   std::thread thread_2(&Application::loadData, &app);
+	   thread_2.join();
+	   thread_1.join();
+	   return 0;
+	}
+	
+16) what std::future and std::promise ?
+    
+	 std::future is a class template and its object stores the future value.
+	Now what the hell is this future value.
+
+	[showads ad=inside_post]
+
+	Actually a std::future object internally stores a value that will be assigned in future and it also provides a mechanism to access that value i.e. using get() member function. But if somebody tries to access this associated value of future through get() function before it is available, then get() function will block till value is not available.
+
+	std::promise is also a class template and its object promises to set the value in future. Each std::promise object has an associated std::future object that will give the value once set by the std::promise object.
+
+	A std::promise object shares data with its associated std::future object.
+	
+	#include <iostream>
+	#include <thread>
+	#include <future>
+	void initiazer(std::promise<int> * promObj)
+	{
+		std::cout<<"Inside Thread"<<std::endl;     promObj->set_value(35);
+	}
+	int main()
+	{
+		std::promise<int> promiseObj;
+		std::future<int> futureObj = promiseObj.get_future();
+		std::thread th(initiazer, &promiseObj);
+		std::cout<<futureObj.get()<<std::endl;
+		th.join();
+		return 0;
+	}
+	
+
+17) what is std::async() function?
+    
+	std::async() is a function template that accepts a callback(i.e. function or function object) as an argument and potentially executes them asynchronously.
+	
+	syntax:
+	
+	template<class fn, class ...Args>
+	future<typename result_of<Fn(Args...)>::type>async (launch policy, Fn&& fn, Args&& ...args);
+	
+	std::async returns a std::future<T>, that stores the value returned by function object executed by function can be passed to std::async() as arguments after the function pointer argument.
+	
+	First argument is std::async is launch policy, It control the asynchronous behaviour of std::async. we can create std::async with 3 different launch policies i.e.
+	
+	std::launch::async : It guarantees the asynchronous behaviour i.e passed function will be executed in seperate thread.
+	
+	std::launch::deferred : Non asynchronous behaviour i.e Function will be called when other thread will call get() on future to access the shared state.
+	
+	std::launch::async|std::launch::deferred : Its the default behaviour. with this launch policy it can run asynchronously or not depending on the load on system. But we have no control over it.
+	
+	If we do not specify an launch policy. Its behaviour will be similar to std::launch::async | std::launch::deferred.
+	
+	We can pass any callback in std::async i.e.
+	
+	i)   Function Pointer
+	ii)  Function object
+	iii) Lambda Function.
+	
+	
+18) why we need of std::async()?
+
+    Suppose we have to fetch some data from DB and some from files in file-system. then I need to merge both the strings and print.
+	
+	 In a single thread we will do like this.
+	 
+	    #include <iostream>
+		#include <thread>
+		#include <future>
+		#include <chrono>
+		using namespace std::chrono;
+		std::string FetchDatafromDB(std::string strval)
+		{
+			std::this_thread::sleep_for(seconds(5));
+			return "DB_"+strval;
+		}
+
+		std::string FetchDataFromFile(std::string strval)
+		{
+			std::this_thread::sleep_for(seconds(5));
+			return "File_"+strval;
+		}
+
+		int main()
+		{
+			system_clock::time_point start = system_clock::now();
+			
+			std::string strDBData = FetchDatafromDB("DataBase");
+			
+			std::string strFileData = FetchDataFromFile("DataFile");
+			
+			auto end = system_clock::now();
+			
+			auto diff = duration_cast < std::chrono::seconds > (end - start).count();
+			
+			std::cout<<"Total time taken = "<<diff<<" seconds "<<std::endl;
+			
+			std::cout<<strDBData<<std::endl;
+			std::cout<<strFileData<<std::endl;
+			
+			return 0;
+			
+		}
+	
+	 output: 
+	    Total time taken = 10 seconds 
+		DB_DataBase
+		File_DataFile
+		
+	As both the functions fetchDataFromDB() & fetchDataFromFile() takes 5 seconds each and are running in a single thread so, total time consumed will be 10 seconds.
+	
+	Now as fetching data from DB and file are independent of each other and also time consuming. So, we can run them in parallel.
+	One way to do is create a new thread pass a promise as an argument to thread function and fetch data from associated std::future object in calling thread.
+
+	The other easy way is using std::async
+	
+	Calling std::async with function pointer as callback.
+	
+	std::future<std::string> resultFromDB = std::async(std::launch::async, fetchDataFromDB, "Data");
+	// Do Some Stuff 
+	//Fetch Data from DB
+	// Will block till data is available in future<std::string> object.
+	std::string dbData = resultFromDB.get();
+	
+	std::async() does following things,
+	It automatically creates a thread (Or picks from internal thread pool) and a promise object for us.
+	Then passes the std::promise object to thread function and returns the associated std::future object.
+	When our passed argument function exits then its value will be set in this promise object, so eventually return value will be available in std::future object.
+	Now change the above example and use std::async to read data from DB asyncronously i.e.
+		
+	#include <iostream>
+	#include <string>
+	#include <chrono>
+	#include <thread>
+	#include <future>
+	using namespace std::chrono;
+	std::string fetchDataFromDB(std::string recvdData)
+	{
+		// Make sure that function takes 5 seconds to complete
+		std::this_thread::sleep_for(seconds(5));
+		//Do stuff like creating DB Connection and fetching Data
+		return "DB_" + recvdData;
+	}
+	std::string fetchDataFromFile(std::string recvdData)
+	{
+		// Make sure that function takes 5 seconds to complete
+		std::this_thread::sleep_for(seconds(5));
+		//Do stuff like fetching Data File
+		return "File_" + recvdData;
+	}
+	int main()
+	{
+		// Get Start Time
+		system_clock::time_point start = system_clock::now();
+		std::future<std::string> resultFromDB = std::async(std::launch::async, fetchDataFromDB, "Data");
+		//Fetch Data from File
+		std::string fileData = fetchDataFromFile("Data");
+		//Fetch Data from DB
+		// Will block till data is available in future<std::string> object.
+		std::string dbData = resultFromDB.get();
+		// Get End Time
+		auto end = system_clock::now();
+		auto diff = duration_cast < std::chrono::seconds > (end - start).count();
+		std::cout << "Total Time Taken = " << diff << " Seconds" << std::endl;
+		//Combine The Data
+		std::string data = dbData + " :: " + fileData;
+		//Printing the combined Data
+		std::cout << "Data = " << data << std::endl;
+		return 0;
+	}
+	
+19) Calling std::async with Function Object as callback?
+
+			struct DataFetcher
+			{
+				std::string operator()(std::string recvdData)
+				{
+					// Make sure that function takes 5 seconds to complete
+					std::this_thread::sleep_for (seconds(5));
+					//Do stuff like fetching Data File
+					return "File_" + recvdData;
+				}
+			};
+			//Calling std::async with function object
+			std::future<std::string> fileResult = std::async(DataFetcher(), "Data");
+	
+	
+20) Calling std::async with Lambda function as callback?
+	
+	
+			//Calling std::async with lambda function
+			std::future<std::string> resultFromDB = std::async([](std::string recvdData){
+									std::this_thread::sleep_for (seconds(5));
+									//Do stuff like creating DB Connection and fetching Data
+									return "DB_" + recvdData;
+								}, "Data");
+21) what is std::packaged_task?
+
+    std::packaged_task<> is a class template and represents a asynchronous task. It encapsulates,
+
+    i) A callable entity i.e either function, lambda function or function object.
+    ii) A shared state that stores the value returned or thrown exception by associated callback.
+
+    Need of std::packaged_task<>
+
+    std::string getDataFromDB(std::string token)
+    {
+	  std::string data = "Data fetched from DB by filter :: "+ token;
+	  return data;
+	}
+
+22) Using packaged_task<> with function to create Asynchronous tasks?
+
+    std::packaged_task<> can wrap around a normal function and make it applicable to run as asynchronous function.
+
+    When std::packaged_task<> is called in seperate thread, it call calls the associated callback and stores the return value/exception in its internal shared state. This value can be accessed in other thread or main function through std::future<> object.
+
+    i) creating std::packaged_task<> object.
+
+       std::packaged_task<std::string (std::string)> task(getDataFromDB);
+
+    ii) Fetch the future object from it,
+
+        std::future<std::string> result = task.get_future();
+
+    iii) Passing packaged_task<> to a thread
+         std::thread th(std::move(task),"Arg");	
+	
+	
+	Example:
+	#include <iostream>
+	#include <thread>
+	#include <future>
+	#include <string>
+	// Fetch some data from DB
+	std::string getDataFromDB( std::string token)
+	{
+		// Do some stuff to fetch the data
+		std::string data = "Data fetched from DB by Filter :: " + token;
+		return data;
+	}
+	struct DBDataFetcher
+	{
+		std::string operator()(std::string token)
+		{
+			// Do some stuff to fetch the data
+						std::string data = "Data From " + token;
+						return data;
+		}
+	};
+	int main()
+	{
+		// Create a packaged_task<> that encapsulated the callback i.e. a function
+		std::packaged_task<std::string (std::string)> task(getDataFromDB);
+		
+		// Create a packaged_task<> that encapsulated a lambda function
+		std::packaged_task<std::string (std::string)> task([](std::string token){
+			// Do some stuff to fetch the data
+				std::string data = "Data From " + token;
+				return data;
+		});
+	    
+		// Create a packaged_task<> that encapsulated a function pointer
+		std::packaged_task<std::string (std::string)> task(std::move(DBDataFetcher()));
+		 
+		// Fetch the associated future<> from packaged_task<>
+		std::future<std::string> result = task.get_future();
+		// Pass the packaged_task to thread to run asynchronously
+		std::thread th(std::move(task), "Arg");
+		// Join the thread. Its blocking and returns when thread is finished.
+		th.join();
+		// Fetch the result of packaged_task<> i.e. value returned by getDataFromDB()
+		std::string data =  result.get();
+		std::cout <<  data << std::endl;
+		return 0;
+	}
+	
+	
+	
+23) what is uniq_lock in c++?
+    
+	 i)  The class unique_lock is a mutex ownership wrapper.
+	 ii) It allows:
+	     a. can have different locking strategies.
+		 b. time-constrained attempts at locking (try_lock_for, try_lock_until).
+		 
+	     c. recursive locking
+         d. transfer of lock ownership (move not copy)
+         e. condition variables.
+
+     
+      Locking strategies
+      Type                              Effects
+      deffer_lock             do not acquire ownership of the mutex	  
+	  try_to_lock             try to acquire ownership of the mutex without blocking
+	  adopt_lock               assume the calling thread already has ownership of the mutex
+	  
+Q) What are the 6 synchronizations primitive available in Multithreading?
+			Mutex
+			Join
+			Condition Variable
+			Barriers
+			Spin Lock
+			Semaphore
+				
+Q) Name the design pattern for the thread?
+
+		Some popular test cases in the current IT industry
+		Thread Pool (Boos and Worker)
+		Peer (Work Crew)
+		Pipeline
+		
+Q) Brief me about the available models in Multithreading?
+
+		Many to many relations
+		Many to One relation
+		One to one relation
+	
+	
+	
+	
+	
+	
+	

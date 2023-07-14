@@ -1,0 +1,1870 @@
+1) what is structural padding and packing ?
+'
+   It is a way to speed up cpu optimization.
+   
+   Example :
+    #include <iostream>
+	using namespace std;
+
+	struct Base
+	{
+		char a;
+		char b;
+		int c;
+	};
+	int main()
+	{
+		
+		cout<<sizeof(Base)<<endl;
+		cout<<sizeof(Cbase)<<endl;
+		return 0;
+	}
+	
+	|a|b|-|-|c|c|c|c|
+	 0 1 2 3 4 5 6 7
+	 
+	How data gets memory slots:
+	
+	1Byte -> can be stored at multiple of 1 memory slot
+	2Byte -> can be stored at multiple of 2 memory slot
+	4Byte -> can be stored at multiple of 4 memory slot
+	8Byte -> can be stored at multiple of 8 memory slot
+	
+	so assume our memory locations 0 to 10
+	char can store multiple of 1byte means it can store 0 to 10 any position
+	int is 4 bytes means it can store 0, 4 , 8 position only
+	double is 8 byte means it can store multiple 8 means it starts 0, 8 position only
+	
+	so the above Example 
+	
+	|a|b|-|-|c|c|c|c|
+	 0 1 2 3 4 5 6 7
+	
+	Example : The strucuture is changes like below
+	struct Base
+	{
+		double a;
+		char b;
+		int c;
+	};
+	
+	now the size is 16 because
+	|a|a|a|a|a|a|a|a|b|-| - | - | c | c | c | c |
+	 0 1 2 3 4 5 6 7 8 9 10  11   12  13  14  15
+	 
+	In above example double is 8 bytes so it starts from 0 position after char is 1 byte so it stores at 9 position and int is 4 bytes so it starts position are multiple of 4 means 0,4,8 but this are already filled and next position is 12 so compiler stores at 12 position. due that size is 16 if we use double c instead int c in above example then the size is 24 because double stores from multiple of 8 bytes that means it starts 0, 8 this are already filled next is 16 so compiler stores at 16 position.
+	
+2) How compilation works internally in C And C++ ?
+   
+    
+	[Source Code] 1.cpp ---> Compiler ---> 1.o [object code (*.o file)]--
+																		 |
+	[Source Code] 2.cpp ---> Compiler ---> 2.o [object code (*.o file)]--* --->[Linker] --> [Executable] ---> Loader --> Running Executable in memory
+	                                                                     |
+	[Source Code] 3.cpp ---> Compiler ---> 3.0 [object code (*.o file)]--*
+	                                                                     |
+	                                                    Library file ----
+														
+	------------------------------------- Diagram 2 -------------------------------------------------------
+	
+	           
+	Editor or IDE (write source code (.cpp, .h))----> Prepocessor (*.i, include file, Replaced symbols) --->compiler (*.s assmble code) ---> Assembler(*.o object 
+	
+	code) ---> Linker --------------------------> .exe ---------> Loader ----> running Executable in memory
+	            /|\                                 /|\
+				 |                                   |
+				 |                                   |
+				 |                                   |
+           static library(*.lib, *.a )         dynamic library 
+				
+				
+	1) first step is prepossor, here it replace the all include library into code and remove the comments from the source code and replace the macro and inline function with the code in preprossor state. then it generates *.i files.
+	2) compiler stage, here it check the errors(tokenizer, anlytical error, symentic error) and generates the assemble code *.s files.
+	3) assembler generates the *.o files or object files.
+	
+3) How delete[] know how many objects to delete ?
+
+     1) over allocation 2) associative array
+	 
+    #include <iostream>
+	int const n = 10;
+	
+	 class Base
+	 {
+	   public:
+	   int b_var;
+	 };
+	 int main()
+	 {
+	    Base *bp = new Base[n];
+		//char *tmp = (char*) operator new[](WORDSIZE+n*sizeof(Base));
+		//Base* p = (Base*) (tmp+WORDSIZE);
+		//*(size_t*)tmp = n;
+		//for(int i = 0 ; i < n ; i++)
+		// new(p+i) Base();
+		
+		delete[] bp;
+		//size_t n = *(size_t*)((char*)bp - WORDSIZE);
+		// while(n-- != 0)
+		// (bp+n)->~Base();
+		// operator delete[] ((char*)bp - WORDSIZE);
+	 }
+
+4) What is the difference between Reference and pointer ?
+
+    1) Memory Address
+	2) Reassignment not possible
+	3) NULL value
+	4) Arthemitic operations
+	5) Indirection
+	
+	
+5) what is function pointer ?
+
+   Normal pointer variable to stores the address of another variable. function pointer stores the address of another function.
+
+   Example :
+
+		#include <iostream>
+		using namespace std;
+
+		int add(int val, int val2)
+		{
+			return (val+val2);
+		}
+
+		int fun1(int (*fun)(int,int))
+		{
+			int sum = fun(1,2);
+			cout<<sum<<endl;
+			return sum;
+		}
+		int main()
+		{
+			
+			int sum = fun1(add);
+			cout<< sum<<endl;
+			return 0;
+		}   
+		
+6) what is the use of friend function and class in c++ ?
+
+   Friend keyword used to give the access explicitly.
+   
+   use case : If Admin class one function need Employe class information then we can declare that function as friend inside the employee class
+               If one class is derived from some other class but another class fun need this class information then instead of deriving that class you can use the friend keyword. 
+
+    What are the limitations of friend function?
+	The major disadvantage of friend functions is that they occupy the maximum size of the memory and can’t do any run-time polymorphism concepts.			   
+
+   Example : 
+    #include <iostream>
+	using namespace std;
+
+	class sample
+	{
+		int x;
+		public:
+		sample(int x):x(x){}
+		~sample() { }
+		
+		friend void fun(sample obj);
+	};
+
+	void fun(sample obj)
+	{
+		cout<<"before fun : "<< obj.x << endl;
+		obj.x = 20;
+		cout<<"after fun  : "<<obj.x <<endl;
+	}
+
+	int main()
+	{
+		sample obj(10);
+		fun(obj);
+		return 0;
+	}
+	
+7) How to stop someone from taking address of your object ?
+
+    overload the & operator and keep it private.
+	delete & operator from your class.
+	
+	Example:
+		#include <iostream>
+		using namespace std;
+
+		class sample
+		{
+		   private:
+		   sample* operator&()
+		   {
+			   cout<<"Bingo"<<endl;
+			   return this;
+		   }
+		   public:
+		   sample* operator&() = delete;
+			
+		};
+
+
+		int main()
+		{
+			sample obj;
+			sample *obj1 = &obj;
+			cout<<&obj<<" "<<obj1<<endl;
+			return 0;
+		}
+		
+8) what is void and void pointer in c++?
+
+   Topic : void
+    i)  void is used to dentote nothing
+	ii) If some function is not returning anything then we use void type to denote that.
+	iii) If some function doesn't take any parameter then we use void type to denote that.
+	iv) we can not create void variable.
+	v) size of void is 1 in gcc compiler but it is not valid to check sizeof void
+	
+	TOPIC: void*
+	i)  void* is universal pointer.
+	ii) we can convert any data type pointer to void* (except function pointer, const or volatile)
+	iii) void* can not be dereferenced.
+	
+	Bottom line : 
+	
+	void means nothing and void* means pointer to anything (except function pointer, const or volatile)
+	
+	USE CASES:
+	//malloc and calloc returns void* so that we can typecase to our desired data type.
+	//void* are used to create generic function in c.(compare function used in qsort function in c).
+	
+9) static_cast in c++ ?
+
+   1) It performs implicit conversion between types.
+       Example:
+	   #include <iostream>
+		using namespace std;
+		int main()
+		{
+			double d =20.0;
+			int a = d; // implicit conversion
+			int b = static_cast<int>(d); // static_cast
+			cout<<a<<" "<<b<<endl;
+			return 0;
+		}
+	2) use static_cast when conversion between types is provided through conversion or conversion constructor.
+	  Example:
+	  #include <iostream>
+	  using namespace std;
+	   class Int
+	   {
+		   int x;
+		   public:
+		   Int(int x):x{x}
+		   {
+			  cout<<"conversion constructor : "<<endl; 
+		   }
+		   operator string()
+		   {
+			   cout<<"conversion operator :  "<<endl;
+			   return to_string(x);
+		   }
+		};
+
+		int main()
+		{
+			Int obj(10);
+			obj = 20;
+			string str1 = obj;
+			string str = static_cast<string>(obj);
+			
+			return 0;
+		}
+	
+	   3) static_cast is more restrictive than c-style.
+	      Example : char* to int* is allowed in c-style but not with static_cast.
+		  
+		   #include <iostream>
+			using namespace std;
+
+			int main()
+			{
+				char c = 'c';
+				int *p = (int*)&c;// PASS compile time but fail at runtime or gives undefined behavior
+				cout<<*p<<endl;
+				int *p1 = static_cast<int*>(&c);//FAILS at compile time 
+				return 0;
+			}
+		4) static_cast avoid cast from derived to private base pointer.
+		    Example:
+			#include <iostream>
+			using namespace std;
+			class Base
+			{
+				int x;
+				public:
+				Base()
+				{
+					cout<<"Inside the base : "<<endl;
+				}
+				
+				private:
+				void print()
+				{
+					cout<<"Inside the private : "<<endl;
+				}
+			};
+
+			class Derived : private Base
+			{
+			   public:
+			   Derived()
+			   {
+				   cout<<"inside the derived : "<<endl;
+			   }
+			};
+
+			int main()
+			{
+				Derived d;
+				Base *p = (Base*)&d;//allowed at compile time 
+				Base *p1 = static_case<Base*>(&d); // Not allowed at compile time
+				return 0;
+			}
+		5) static_cast should be prefered when converting to void* or or from void*
+		
+		   int main()
+		   {
+		      int i = 10;
+			  void *v  = static_case<void*>(&i);
+			  int *ip = static_cast<int*>(v);
+		   }
+	    Disadvatages of static_cast:
+		1) use for all upcasts, but never use for confused down cast.
+		
+		  Example:
+		  #include <iostream>
+			using namespace std;
+			class Base
+			{
+				
+			};
+
+			class Derived1 : public Base
+			{
+			   
+			};
+			class Derived2 : public Base
+			{
+			   
+			};
+
+			int main()
+			{
+				Derived1 d1;
+				Derived2 d2;
+				
+				Base *bp1 = static_cast<Base*>(&d1); 
+				Base *bp2 = static_cast<Base*>(&d2);
+				
+				Derived1 *d1p = static_cast<Derived1*>(bp2);
+				Derived2 *d2p = static_cast<Derived2*>(bp1);;
+				return 0;
+			}
+	
+10) const_cast in c++?
+    
+	 The expression const_cast<T>(v) can be used to change the const or volatile qualifiers of pointers or references. where T must be a pointer, reference, or pointer to member type.
+	 
+	 1) When actual referred object/variable is not const.
+	 
+	    #include <iostream>
+		using namespace std;
+		
+		int main()
+		{
+		  const int a   = 10;
+		  const int *b1 = &a;
+		  int *d1 = const_cast<int*>(b1);
+		  *d1 = 15; // invalid and undefined behavior
+		  
+		  int a2 = 20;
+		  const int *b2 = &a2;
+		  int *d2 = const_cast<int*>(b2);
+		  *d2 = 30; // valid code
+		  return 0;
+		}
+	2) When we need to call some 3rd party library where it is taking variable/object as non const but not changing that.
+	
+	   void thirdpartylibrary(int *x)
+	   {
+	      int k = 10;
+		  cout<<k+*(x);
+	   }
+       int main()
+	   {
+	     const int x = 20;
+		 const int *px = &x;
+		 thirdpartylibrary(const_cast<int*>(px));
+		 return 0;
+	   }
+	   
+11) reinterpret_cast in c++?
+	
+	   It can perform dangerous conversion because it can typecast any pointer to any other pointer.
+	   
+	   Example:
+	    class Mango
+		{
+		  public:
+		  void eatmango()
+		  {
+		    cout<<"eating mango" <<endl;
+		  }
+		};
+		class Banana
+		{
+		  public:
+		  void eatBanana()
+		  {
+		     cout<<"eating banana"<<endl;
+		  }
+		};
+		int main()
+		{
+		   Banana *b = new Banana();
+		   Manfo *m = new Mango();
+		   Banana *newbanana = reinterpret_cast<Banana*>(m);
+		   newbanana->eatBanana();
+		   return 0;
+		   
+		}
+		
+		output : eating banana.
+		
+		2) It is used when you want to work with bits.
+		  
+		    Example:
+			struct mystruct
+			{
+			  int x;
+			  int y;
+			  char c;
+			  bool b;
+			};
+			int main()
+			{
+			   mystruct s;
+			   s.x = 5;
+			   s.y = 10;
+			   s.c = 'a';
+			   s.b = true;
+			   int *p = reinterpret_cast<int*>(&s);
+			   cout<<*p<<endl;
+			   return 0;
+			}
+	     
+		 Bottom Line:
+		 
+		 The Result of reinterpret_cast cannot safely be used for anything other than being cast back to its original type.
+		 we should be very carful when using this cast.
+		 If we use this type of cast then it becomes non-protable product.
+		 
+12) why we use dynamic_cast in c++?
+
+    i)   dynamic_cast is used at run time to find out correct down-cast.
+	
+	Note 1 : Need at least one virtual function in base class.
+	Note 2 : If the cast is successful, dynamic_cast returns a value of type new_type.
+	Note 3 : If the cast fails and new_type is a reference type, it Throws an exception that matches a handler of type std::bad_cast.
+	
+		#include <iostream>
+		#include <exception>
+		using namespace std;
+
+		class Base
+		{
+			
+			virtual void print()
+			{
+				cout<<"Inside the base class : "<<endl;
+			}
+		};
+
+		class derived1 : public Base
+		{
+			void print()
+			{
+				cout<<"Inside the derived1 class : "<<endl;
+			}
+		};
+
+		class derived2 : public Base
+		{
+			void print()
+			{
+				cout<<"Inside derived2 class : "<<endl;
+			}
+		};
+
+		int main()
+		{
+			
+			derived1 d1;
+			Base *bp = dynamic_cast<Base*>(&d1);
+			
+			derived2 *d2 = dynamic_cast<derived2*>(bp);
+			
+			if(d2 == nullptr)
+			  cout<<"NULL"<<endl;
+			else
+			  cout<<"Not NULL"<<endl;
+			  
+			///for reference compiler return std::bad_cast exception  
+			try
+			{
+			derived2 &dr2 = dynamic_cast<derived2&>(d1);
+			}
+			catch(std::exception &e)
+			{
+				cout<<e.what()<<endl;
+			}
+			
+			return 0;
+		}
+
+13) When we reference over pointer and vice versa?
+
+     REFERENCE : use references in function parameters and return type.
+	 
+	 1) Pass big objects
+	 2) To avoid object slicing
+	 3) To modify local variable of caller function
+	 4) To achieve runtime polymorphism in a function.
+	 
+	 POINTER  : use pointer in algorithms and data structures like linked list, tree , graph etc.
+	 
+	 Reason 1 : sometimes we put NULL/null pointer in node
+     Reason 2 : some time we change pointer to point some other node.
+
+
+14) What is RVO and NRVO ?
+
+     fno-elide-constructors
+	 
+	 
+15) What is code bloating in c++?
+
+    Code bloat is the production of code that is perceived as unnecessarily long, slow or otherwise wasteful of resources.
+	
+	#include <iostream>
+	using namespace std;
+
+	int main()
+	{
+		std::string str = "Hi, I am in main ";
+		// Here we are just printing the string for that no need to create a string variable
+		// directly we can print cout<<"Hi, I am in main" <<endl; like this.
+		// code bloating is nothing but if create a variable or object unnesserily that cause the code bloating 
+		cout<<str<<endl; 
+		return 0;
+	}
+	
+16) whats is diamond problem in c++?
+
+		In the below program if we remove virtual key word from class B and class C derived time then Class B and C derived from class A and Class D is derived from class B and Class C now Class D contains 2 copies of class A information that means compiler creates 2 times memory for class A in Class D. If you try to access class A member varibles by using class D object then compiler don't understand which copy need to use and it gives the ambiguty exception it is called diamond problem to overcome this use the virtual keyword when deriving from class B and Class C from class A. 
+		#include <iostream>
+		using namespace std;
+
+		class A
+		{
+			double a;
+		};
+		class B: virtual public A 
+		{
+			
+		};
+		class C: virtual public A 
+		{
+			
+		};
+		class D: public B,public C
+		{
+			
+		};
+		int main()
+		{
+			// without virtual keyword used in B and C
+			cout<<"Class A size : "<<sizeof(A)<<endl; // size of class A is 4 bytes
+			cout<<"Class B size : "<<sizeof(B)<<endl; // size of class B is 4 bytes because inherited from A
+			cout<<"Class C size : "<<sizeof(C)<<endl; // size of class C is 4 bytes because inherited from A
+			cout<<"Class D size : "<<sizeof(D)<<endl; // size of class D is 8 bytes because inherited from B and C so compiler creates 2 copies of class A
+			return 0;
+		}
+		
+17) what is placement new in c++?
+
+		#include <iostream>
+		using namespace std;
+
+		class Base
+		{
+			public:
+			Base(){cout<<"constructor : "<<endl;}
+			~Base(){ cout<<"Destructor : "<<endl;}
+		};
+		int main()
+		{
+			//Normal case:
+			cout<<"Normal case : "<<endl;
+			Base *obj = new Base();
+			delete obj;
+			
+			//Placement new case
+			std::cout<<"Placement new case : "<<std::endl;
+			char *memory = new char[10*sizeof(Base)];
+			Base *obj1 = new(&memory[0]) Base();
+			Base *obj2 = new(&memory[1]) Base();
+			
+			obj1->~Base();
+			obj2->~Base();
+			
+			delete[] memory;
+			return 1;
+			
+		};
+   
+   
+
+
+https://godbolt.org/ this website tells which code is faster and optmizations (https://www.youtube.com/watch?v=_fzAF1WAlgM&list=PLk6CEY9XxSIDy8qVHZV-Nf-r9f2BkRZ6p&index=65)
+
+
+17) Difference between operator [] and at() to access vector in c++?
+
+    1) Both are used to access elements in vector.
+	2) operator[] don't do range checking, at() does range checking before accessing
+	3) operator[] don't throw when it is out of bound (undefined behaviour), but at() throw if it is out of bound.
+	4) operator[] faster and at() is slower as compare to operator[]
+    	 
+	 Example:
+	    #include <iostream>
+		#include <vector>
+		using namespace std;
+
+		int main()
+		{
+			vector<int> vec = {3,5,6,7};
+			cout<<vec[0]<<endl; // output : 3
+			cout<<vec.at(0)<<endl; // output  : 3
+			
+			cout<<vec[100]<<endl; // output : undefined behaviour
+			cout<<vec.at(100)<<endl; // output  : throws out of bound exception because it checks the range before accessing
+			return 0;
+		}
+	 
+	
+18) what is Rule of 3 and Rule of 5 ?
+
+     RULE OF THREE:
+	 
+	 1.Destructor
+	 2.copy constructor
+	 3.copy assignment operator
+
+     RULE OF FIVE :
+      
+	 1.Destructor
+	 2.copy constructor
+	 3.copy assignment operator
+	 4.Move constructor
+	 5.Move Assignment operator.
+	 
+	 
+19) Advantages and disadvantage of c++ program language ?
+
+    1) Portability : c++ provides this feature of portability allowing us develop codes without caring about the hardware. This lets us move the development of program from one platform to another.
+	
+	For example, you're working on windows OS and for some reason, you have to switch to linux, the codes from windows OS will also run in the LINUX OS without any error.
+	
+	2) Mid-level programing language ?
+	
+	 Being a mid-level programming language, we can treat it as both a low-level and high-level language. Features of high-level language help to develop games and desktop applications, whereas features of low-level language help make kernels.
+	 
+	3) Object Oriented 
+       
+      The OOP concepts like polymorphism, encapsulation, inheritence and abstraction give c++ the biggest advantage over other programming languages. It proved to be of great significance since this feature was not in c, this helped users to treat data as objects and classes.
+    
+	4) Multi paradigm programing language:
+
+       Paradigm refers to the planning involved in programming. It concerns the logi, the style and the way how we proceed with the program. c++ is multi paradigm programing language as it follows three paradigms:
+
+        a) Generic    - Using a single idea that serves multiple purpose.
+        b) Imperative - Using steps that change the state of program.
+     	c) Object Oriented - using methods and classes for reusability and modularity.
+		
+	5) Memory Management: 
+	    c++ supports DMA (Dynamic Memory Allocation), which helps to free and allocate memory. Since there is no garbage collection, c++c gives the programmer total control over memory managment.
+		
+	6) Fast and powerful :
+	    As c++ is a compiler based programing language, we do not require to install a special runtime while running the prorgam. hence, they are pre-interpreted and it makes the code faster and more powerful.
+		
+	7) Similar to other languages:
+	   c++ syntax is similar to c#, C, and Java.
+    
+	Disadvantage:
+	
+	 1) Pointers
+	 2) No garbage collection
+	 3) Unsafe
+	 4) Complex
+	 5) No built in threads
+	 6) lack of algebraic data types
+	 
+	 
+20) Association , Aggregation and composition ?
+
+    Association: If two classes in a model need to communicate with each other, there must be a link between them, and that can be represented by an association (connector).
+	
+	Aggregation: The Aggregation implies a relationship where the child can exist independently of the parent.
+	
+	Composition: Composition implies a relationship where the child cannot exist independent of the parent. 
+	
+21) In p = new Fred(), does the Fred memory “leak” if the Fred constructor throws an exception?
+
+    No, If an exception occurs during the Fred of p = new Fred(). The c++ language guarantees that the memory sizeof(Fred) bytes that allocated will were allocated will automagically be released back to the heap.
+	
+	Here are the details: new Fred() is a two-step process:
+
+	1) sizeof(Fred) bytes of memory are allocated using the primitive void* operator new(size_t nbytes). This primitive is similar in spirit to malloc(size_t nbytes). (Note, however, that these two are not interchangeable; e.g., there is no guarantee that the two memory allocation primitives even use the same heap!).
+	2) It constructs an object in that memory by calling the Fred constructor. The pointer returned from the first step is passed as the this parameter to the constructor. This step is wrapped in a try … catch block to handle the case when an exception is thrown during this step.
+	
+	Fred* p;
+	void* tmp = operator new(sizeof(Fred));
+	try
+	{
+	  new(temp) Fred(); //placement new
+	  p = (Fred*) tmp; the pointer is assigned only if the ctor succeed
+	}
+	catch(...)
+	{
+	  operator delete(tmp); //Deallocate the memory
+	  throw; // Re-throw the exception
+	}
+	
+	
+	
+22) what is stack and heap ?
+
+    The memory that program uses is typically divided into a few different area, called segments.
+
+    i) The code segment(also called a text segment), where the compiled
+	   program sits in memory. The code segment is typically read-only.
+	   
+	ii) The bss segment(also called the uninitialized data segment), where zero -initialized global and static variable are stored.
+	iii) The data segment (also called the initialized data segment), where initialized global and static variables are stored.
+	iv) The heap, where dynamically allocated variables are allocated from.
+	v) The call stack, where function parameters, local variables, and other function related information are stored.
+
+
+23) why we need brace initialization ?
+
+    Brace initialization was introduced to provide a more consistent initialization syntax.
+	
+	Brace initialization has added benefit : It disallows "narrowing conversions". This means that if you try to brace initialize a variable using a value that the variable can not safely hold, the compiler will produce an error.
+	
+	    #include <iostream>
+		using namespace std;
+
+		int main()
+		{
+			int x1 = 4.5; // output : 4
+			int x2;
+			x2 = 4.5; // output : 4
+			int x3 (4.5); // output : 4
+			int x4 = (4.5);// output : 4
+			int x5 {4.5}; //error: narrowing conversion of ‘4.5e+0’ from ‘double’ to ‘int’ [-Wnarrowing]
+			cout<<x1<<" "<<x2<<" "<<x3<<" "<<x4<<" "<<endl;
+			return 0;
+		}
+		
+24) What is the difference between initialization and assignment?
+    Initialization gives a variable an initial value at the point when it is created. Assignment gives a variable a value at some point after the variable is created.
+	
+25) What form of initialization should you be using?
+    Direct brace initialization.
+	
+	
+27) Compile-time constants, constant expressions, and constexpr ?
+
+   A constant expression is an expression that can be evaluated by the compiler at compile-time. To be a constant expression, all the values in the expression must be known at compile-time 
+   
+   Compile-time const : A const variable is a compile-time constant if its initializer is a constant expression.
+   Runtime const : Any const variable that is initialized with a non-constant expression is a runtime constant. Runtime constants are constants whose initialization values aren’t known until runtime.
+   
+   constexpr :  we use the constexpr keyword instead of const in a variable’s declaration. A constexpr (which is short for “constant expression”) variable can only be a compile-time constant. If the initialization value of a constexpr variable is not a constant expression, the compiler will error.
+   
+        #include <iostream>
+		int getNumber()
+		{
+			std::cout << "Enter a number: ";
+			int y{};
+			std::cin >> y;
+			return y;
+		}
+		int main()
+		{
+			const int x{ 3 };           // x is a compile time constant
+			const int y{ getNumber() }; // y is a runtime constant
+			const int z{ x + y };       // x + y is a runtime expression
+			std::cout << z << '\n';     // this is also a runtime expression
+			
+			constexpr double gravity { 9.8 }; // ok: 9.8 is a constant expression
+			constexpr int sum { 4 + 5 };      // ok: 4 + 5 is a constant expression
+			constexpr int something { sum };  // ok: sum is a constant expression
+			constexpr int myAge { age };      // compile error: age is not a constant expression
+            constexpr int f { getNumber() };       // compile error: return value of five() is not a constant expression
+			
+			return 0;
+		}
+		
+    Best Practice :
+	Any variable that should not be modifiable after initialization and whose initializer is known at compile-time should be declared as constexpr.
+	Any variable that should not be modifiable after initialization and whose initializer is not known at compile-time should be declared as const.
+	
+	disadvantage:
+
+	Evaluating constant expressions at compile-time makes our compilation take longer (because the compiler has to do more work), but such expressions only need to be evaluated once (rather than every time the program is run). The resulting executables are faster and use less memory.
+
+28) string and string_view ?
+
+    std::String: 
+	
+	Also note that std::string::length() returns an unsigned integral value (most likely of type size_t). If you want to assign the length to an int variable, you should static_cast it to avoid compiler warnings about signed/unsigned conversions:
+
+	int length { static_cast<int>(name.length()) };
+	In C++20, you can also use the std::ssize() function to get the length of a std::string as a signed integer:
+
+	#include <iostream>
+	#include <string>
+
+	int main()
+	{
+		std::string name{ "Alex" };
+		std::cout << name << " has " << std::ssize(name) << " characters\n";
+
+		return 0;
+	}
+
+    Literals for std::string
+
+		Double-quoted string literals (like “Hello, world!”) are C-style strings by default (and thus, have a strange type).
+
+		We can create string literals with type std::string by using a s suffix after the double-quoted string literal.
+
+		#include <iostream>
+		#include <string>      // for std::string
+		#include <string_view> // for std::string_view
+
+		int main()
+		{
+			using namespace std::literals; // easiest way to access the s and sv suffixes
+
+			std::cout << "foo\n";   // no suffix is a C-style string literal
+			std::cout << "goo\n"s;  // s suffix is a std::string literal
+			std::cout << "moo\n"sv; // sv suffix is a std::string_view literal
+
+			return 0;
+		};
+		
+		
+	  string_view : std::string_view C++17
+
+		To address the issue with std::string being expensive to initialize (or copy), C++17 introduced std::string_view (which lives in the <string_view> header). std::string_view provides read-only access to an existing string (a C-style string literal, a std::string, or a char array) without making a copy.
+
+		The following example is identical to the prior one, except we’ve replaced std::string with std::string_view.
+
+       
+	   Advantage :
+	   Prefer std::string_view over std::string when you need a read-only string, especially for function parameters.
+	   
+	   constexpr std::string_view 
+	   Example : 
+	   constexpr std::string_view s{ "Hello, world!" };
+       std::cout << s << '\n'; // s will be replaced with "Hello, world!" at compile-time
+       
+	   Converting a std::string to a std::string_view: A std::string_view can be created using a std::string initializer, and a std::string will implicitly convert to a std::string_view:
+	   Example:
+	   std::string s{ "Hello, world" };
+	   std::string_view sv{ s }; // Initialize a std::string_view from a std::string
+	   
+	   Converting a std::string_view to a std::string : Because std::string makes a copy of its initializer, C++ won’t allow implicit conversion of a std::string from a std::string_view. However, we can explicitly create a std::string with a std::string_view initializer, or we can convert an existing std::string_view to a std::string using static_cast:
+	   
+	    #include <iostream>
+		#include <string>
+		#include <string_view>
+
+		void printString(std::string str)
+		{
+			std::cout << str << '\n';
+		}
+
+		int main()
+		{
+		  std::string_view sv{ "balloon" };
+
+		  std::string str{ sv }; // okay, we can create std::string using std::string_view initializer
+
+		  // printString(sv);   // compile error: won't implicitly convert std::string_view to a std::string
+
+		  printString(static_cast<std::string>(sv)); // okay, we can explicitly cast a std::string_view to a std::string
+
+		  return 0;
+		}
+		
+		
+29) code coverage ?
+
+    The term code coverage is used to describe how much of the source code of a program is executed while testing. There are many different metrics used for code coverage. we'll cover few of the more useful and popular ones in the following section.
+	
+	statement coverage : The term statement coverage refers to the percentage of statements in your code that have been exercised by your testing routines.
+	
+30) what is fetal error ?
+     
+	 If the error is so bad that the program can not continue to operate properly, this is called a non-recoverable error also called a fatal error. in such case, the best thing to do is terminate the program.
+	 
+
+31) what is Assertion ?
+
+    Using a conditional statement to detect an invalid parameter along with printing an error message and terminating the program.
+	
+	An asserting is an expression that will be true unless there is a bug in the program. If the expression evaluates to true, the assertion statement does nothing. If the conditional expression evaluates to false, an error message displayed and the program is terminated.
+	
+	    #include <cassert> // for assert()
+		#include <cmath> // for std::sqrt
+		#include <iostream>
+
+		double calculateTimeUntilObjectHitsGround(double initialHeight, double gravity)
+		{
+		  assert(gravity > 0.0); // The object won't reach the ground unless there is positive gravity.
+
+		  if (initialHeight <= 0.0)
+		  {
+			// The object is already on the ground. Or buried.
+			return 0.0;
+		  }
+
+		  return std::sqrt((2.0 * initialHeight) / gravity);
+		}
+
+		int main()
+		{
+		  std::cout << "Took " << calculateTimeUntilObjectHitsGround(100.0, -9.8) << " second(s)\n";
+
+		  return 0;
+		}
+
+      Note : The assert macro comes with a small performance cost that is incurred each time the assert condition is checked.
+	  
+	  Note1 : assert should never be encountered in production code. Consequently, many developers prefer that asserts are only active in debug builds. c++ comes with a way to turn off asserts in production code. If the macro NDEBUG is defined, the assert macro gets disabled.
+	  
+	  Some assert limitations and warnings :
+	  
+	  There are a few pitfalls and limitations to asserts. First, the assert itself can have a bug. If this happens, the assert will either report an error where none exists, or fail to report a bug where one does exist.
+
+	  Second, your asserts should have no side effects -- that is, the program should run the same with and without the assert. Otherwise, what you are testing in a debug configuration will not be the same as in a release configuration (assuming you ship with NDEBUG).
+	  
+	  Also note that the abort() function terminates the program immediately, without a chance to do any further cleanup (e.g. close a file or database). Because of this, asserts should be used only in cases where corruption isn’t likely to occur if the program terminates unexpectedly.
+	  
+32) what is static_assert ?
+
+    c++ also has another type of assert called static_assert. A static_assert is an assertion that is checked at compile-time rather than at runtime, with a falling static_assert causing a compile error. unlike assert, which is declared in the <cassert> header, static_assert is a keyword, so no header needs to be included to use it.
+	
+33) Null pointer ?
+
+    When a pointer is holding a null value, it means the pointer is not pointing at anything. Such pointer is called a null pointer.
+	
+	example : int* ptr {}; // ptr is a null pointer, and is not holding an address
+	
+34) The nullptr keyword ?
+
+    Much like the keywords true and false represent Boolean literal values, The nullptr keyword represents a null pointer literal. we can use nullptr to explicitly initialize or assign a pointer a null value.
+	
+	int* ptr { nullptr }; // can use nullptr to initialize a pointer to be a null pointer
+	
+35) What is Covariant return types ?
+
+    There is one special case in which a derived class virtual function override can have different return type than the base class and still be considered a matching override. If the return type of a virtual function is a pointer or a reference to some class, overide function can return a pointer or a reference to dervide class. These are called covariant return types.
+
+
+36) What is ADL ?
+
+    Argument Dependent Lookup is the set of rules for looking up unqualified function names in function-call expression, including implicit function calls to overloaded operators. These function names are looked up in the namespaces of their arguments in addition to the scopes and namespaces considered by the usual unqualified name lookup.
+
+    Example:
+        #include <iostream>
+		using namespace std;
+		namespace ns
+		{
+		   struct s {};
+		   void callS(struct s) { cout<<"inside Ns namespaces:";};
+		}
+
+		namespace ns2 
+		{
+		   struct s {};
+		   void callS(struct s) { cout<<"inside Ns2 namespaces:";};
+		}
+
+		int main()
+		{
+			ns::s s1; // defined by using namespaces
+			callS(s1);// compiler check the argument type and then checks in that namespace so it is called namespace ns method
+			return 0;
+		}	
+		
+37) All those templates and template specialization must slow down my program , right?
+
+    Wrong. 
+	This is a quality of implementation issue so your results may vary. However there is usually no slow-down at all. If anything, the template might affect the speed of compilation slightly, but once the types are resolved by the compiler at compile-time, it will typically generate code that is just as fast as with non-template functions, including inline-expanding appropriate functions.
+	
+38) Templates are overloading, right?
+
+    Yes and no,
+	
+	Function template particiapate in name resolution for overloaded functions, but the rules are different. For a template to be considered in overload resolution, the type has to match exactly.If the types do not match exactly, the conversions are not considered and the template is simply dropped from the set of viable functions. that's what is known as "SFINAE" - "Substitution Failure Is Not An Error".
+	
+	Example:
+	#include <iostream>
+	#include <typeinfo>
+	template<typename T> void foo(T* x)
+	{ std::cout << "foo<" << typeid(T).name() << ">(T*)\n"; }
+	void foo(int x)
+	{ std::cout << "foo(int)\n"; }
+	void foo(double x)
+	{ std::cout << "foo(double)\n"; }
+	int main()
+	{
+		foo(42);        // matches foo(int) exactly
+		foo(42.0);      // matches foo(double) exactly
+		foo("abcdef");  // matches foo<T>(T*) with T = char
+		return 0;
+	}
+	
+39) std::allocator ?
+    
+	Allocators are objects responsible for encapsulating memory management std::allocator is used when you want to sepatate allocation and do construction in two steps. it is also used when separate destruction and deallocation is done in two steps. 
+	
+	 Example :
+	    #include <iostream>
+		#include <memory>
+		using namespace std;
+		int main()
+		{
+		 
+			// allocator for integer values
+			allocator<int> myAllocator;
+		 
+			// allocate space for five ints
+			int* arr = myAllocator.allocate(5);
+		 
+			// construct arr[0] and arr[3]
+			// myAllocator.construct(arr, 100); // no longer allowed in C++20
+			arr[0] = 100; // do this instead
+			arr[3] = 10;
+		 
+			cout << arr[3] << endl;
+			cout << arr[0] << endl;
+		 
+			// deallocate space for five ints
+			myAllocator.deallocate(arr, 5);
+		 
+			return 0;
+		}
+	
+	Advantage of using std::allocator
+
+	1) allocator is the memory allocator for the STL containers. This container can separate the memory allocation and de-allocation from the initialization and destruction of their elements. Therefore, a call of vec.reserve(n) of a vector vec allocates only memory for at least n elements. The constructor for each element will not be executed.
+	2) allocator can be adjusted according to the container of your need, for example, vector where you only want to allocate occasionally.
+	3) On the contrary, new doesn’t allow to have control over which constructors are called and simply construct all objects at the same time. That’s an advantage of std:: allocator over new
+	
+40) R-value references ?
+
+    c++ 11 adds a new type of reference called an r-value reference. An r-value reference is a reference that is designed to be initialized with an r-value. while an l-value reference is created using a single ampersand, an r-value reference is created using double ampersand.
+	
+	Note : R value cannot be initialized with l value;
+	
+	R-value reference have two properties :
+	
+	1) R-value references extend the lifespan of the object they are initialized with to the lifespan of the r-value reference.
+	2) non-const r-value references allow you to modify the r-value.
+	
+41) Exception safety guarantees ?
+
+    An exception safety guarantee is a contractual guideline about how functions or classes will behave in the event an exception occurs. There are four levels of exception safety:
+	
+	1) No guarantee : There are no guarantees about what will happen if an exception is thrown( a class may be left in an unusable state).
+	
+	2) Basic guarantee : If an exception is thrown, no memory will be leaked and the object is still usable, but the program may be left in a modified state.
+	
+	3) strong guarantee -- If an exception is thrown, no memory will be leaked and the program state will not be changed. This means the function either completely succed or have no side effects if it fails. this is easy if the failure happens before anything is modified  in the first place, but can also be achieved by rolling back any changes so the program is returned to the pre failure state.
+	
+	4) No throw/No fail - The function will always succed or fail without throwing an exception.(nothrow)
+	
+	
+42) std::weak_ptr ?
+
+    1) The std::weak_ptr are not directly usable. Ti use a std::weak_ptr, you must first convert it into a std::shared_ptr. then you can use the std::shared_ptr. Then you can use the std::shaerd_ptr.To convert a std::weak_ptr into std::shared_ptr, you can use the lock() member function 
+	 
+    Example :
+	#include <iostream>
+	#include <memory>
+	std::weak_ptr<int> gw;
+	void observe()
+	{
+		std::cout << "gw.use_count() == " << gw.use_count() << "; ";
+		// we have to make a copy of shared pointer before usage:
+		if (std::shared_ptr<int> spt = gw.lock()) {
+			std::cout << "*spt == " << *spt << '\n';
+		}
+		else {
+			std::cout << "gw is expired\n";
+		}
+	}
+	int main()
+	{
+		{
+			auto sp = std::make_shared<int>(42);
+			gw = sp;
+	 
+			observe();
+		}
+	 
+		observe();
+	}
+	
+43) what is std::move_if_noexcept ?
+
+     The move constructors exception problem : A move operation transfer ownership of a given resource from the source to the destination object. If the move operation is interrupted by an exception after the transfer of ownership occurs, then our source object will be left in a modified state. This isn't a problem if the source object is a temporary object and going to be discarded after the move anyway. but for non temporary object, we've now damaged the source object. To comply with the strong exception guarantee, we'd need to move the resource back to the source object, but if the move failed the first time, there's no guarantee the move back will succeed either.
+	 
+	 How can we give move constructor the strong exception guarantee? It is simple enough to avoid throwing exceptions in the body of a move constructor, but a move constructor may invoke other constructors that are potentially throwing.
+	 
+	 Example :
+	        #include <iostream>
+			#include <utility> // For std::pair, std::make_pair, std::move, std::move_if_noexcept
+			#include <stdexcept> // std::runtime_error
+
+			class MoveClass
+			{
+			private:
+			  int* m_resource{};
+
+			public:
+			  MoveClass() = default;
+
+			  MoveClass(int resource)
+				: m_resource{ new int{ resource } }
+			  {}
+
+			  // Copy constructor
+			  MoveClass(const MoveClass& that)
+			  {
+				// deep copy
+				if (that.m_resource != nullptr)
+				{
+				  m_resource = new int{ *that.m_resource };
+				}
+			  }
+
+			  // Move constructor
+			  MoveClass(MoveClass&& that) noexcept
+				: m_resource{ that.m_resource }
+			  {
+				that.m_resource = nullptr;
+			  }
+
+			  ~MoveClass()
+			  {
+				std::cout << "destroying " << *this << '\n';
+
+				delete m_resource;
+			  }
+
+			  friend std::ostream& operator<<(std::ostream& out, const MoveClass& moveClass)
+			  {
+				out << "MoveClass(";
+
+				if (moveClass.m_resource == nullptr)
+				{
+				  out << "empty";
+				}
+				else
+				{
+				  out << *moveClass.m_resource;
+				}
+
+				out << ')';
+
+				return out;
+			  }
+			};
+
+
+			class CopyClass
+			{
+			public:
+			  bool m_throw{};
+
+			  CopyClass() = default;
+
+			  // Copy constructor throws an exception when copying from a CopyClass object where its m_throw is 'true'
+			  CopyClass(const CopyClass& that)
+				: m_throw{ that.m_throw }
+			  {
+				if (m_throw)
+				{
+				  throw std::runtime_error{ "abort!" };
+				}
+			  }
+			};
+
+			int main()
+			{
+			  // We can make a std::pair without any problems:
+			  std::pair my_pair{ MoveClass{ 13 }, CopyClass{} };
+
+			  std::cout << "my_pair.first: " << my_pair.first << '\n';
+
+			  // But the problem arises when we try to move that pair into another pair.
+			  try
+			  {
+				my_pair.second.m_throw = true; // To trigger copy constructor exception
+
+				// The following line will throw an exception
+				std::pair moved_pair{ std::move_if_noexcept(my_pair) }; // We'll comment out this line later
+				// std::pair moved_pair{ std::move_if_noexcept(my_pair) }; // We'll uncomment this line later
+
+				std::cout << "moved pair exists\n"; // Never prints
+			  }
+			  catch (const std::exception& ex)
+			  {
+				  std::cerr << "Error found: " << ex.what() << '\n';
+			  }
+
+			  std::cout << "my_pair.first: " << my_pair.first << '\n';
+
+			  return 0;
+			}
+			
+			
+		 noexcept functions are no-throw/no-fail, they implicitly meet the criteria for the strong exception guarantee. Thus, a noexcept move constructor is guaranteed to succeed.	
+		 
+		 we can use the standard library function std::move_if_noexcept() to determine whether a move or a copy should be performed. std::move_if_noexcept is a counterpart to std::move, and is used in the same way
+		 
+		 If the compiler can tell that an object passed as an argument to std::move_if_noexcept won’t throw an exception when it is move constructed (or if the object is move-only and has no copy constructor), then std::move_if_noexcept will perform identically to std::move() (and return the object converted to an r-value). Otherwise, std::move_if_noexcept will return a normal l-value reference to the object.
+		 
+44) Template Argument deduction ?
+
+    We can use the template argument deduction to have the compiler deduce the actual type that should be used from the argument types in the function call.
+	
+	Example:
+	
+	 max<int>(1,2);
+	 
+	 we can do one of these instead
+	 
+	 max<>(1,2); //  the compiler will only consider max<int> template function overloads when determining which overloaded function to call.
+	 max(1,2); //the compiler will consider both max<int> template function overloads and max non-template function overloads.
+
+    Example:
+    #include <iostream>
+	template <typename T>
+	T max(T x, T y)
+	{
+		std::cout << "called max<int>(int, int)\n";
+		return (x > y) ? x : y;
+	}
+
+	int max(int x, int y)
+	{
+		std::cout << "called max(int, int)\n";
+		return (x > y) ? x : y;
+	}
+
+	int main()
+	{
+		std::cout << max<int>(1, 2) << '\n'; // selects max<int>(int, int)
+		std::cout << max<>(1, 2) << '\n';    // deduces max<int>(int, int) (non-template functions not considered)
+		std::cout << max(1, 2) << '\n';      // calls function max(int, int)
+
+		return 0;
+	}	
+	 
+45) what are disadvantages of templates ?
+
+     i) First, the compiler will create (and compile) a function for each function call with a unique set of argument types. So while function templates are compact to write, they can expand into a crazy amount of code, which can lead to code bloat and slow compile times.
+	 ii) The bigger downside of function templates is that they tend to produce crazy-looking, borderline unreadable error messages that are much harder to decipher than those of regular functions.
+	 
+
+46) what is Abbreviated function templates?
+    
+	c++ 20 introduces a new use of the auto keyword: when the auto keyword is used as a parameter type in a normal function, the compiler will automatically convert the function into a function template with each auto parameter becoming an indepent template type parameter. this method for creating a function template is called an abbreviated function template.
+	
+	template<typename T, typename U>
+	auto max(T x, U y)
+	{
+	   return (x > y )?x:y;
+	   
+	}
+	instead
+	
+	auto max(auto x, auto y)
+	{
+	   return (x > y )?x:y;
+	}
+	
+	
+47) what is std::tuple and why we need it?
+
+    std::tuple is a type that can bind fixed size of heterogeneous values together. We need to specify the type of elements as template parameter while creating tuple object.
+	
+	creating tuple object:
+	header : #include <tuple>
+    std::tuple<int, char, duble> result {7, 'c', 2.5};	
+	
+	Let get the first element from tuple.
+	int val = std::get<0>(result);
+	
+	Getting outof Range value from Tuple:
+	Fetching any element with index more than number of elements encapsulated by tuple will cause compile time error.
+	
+	int val2 = std::get<4>(result); //compile time error
+	
+	Wrong type casting while getting value from tuple
+	
+	std::string strval = std::get<0>(result); //compile time error.
+	
+	Getting value from dynamic index:
+	int x = 1;
+	double dval = std::get<x>(result); //compiletime error
+	
+48) what is std::make_tuple ?
+
+     std::make_tuple creates a std::tuple object by deducing the target types of elements in tuple from the types of arguments.
+	 
+	 auto result = std::make_tuple(7, 9.8, "text");
+	
+49) Memory Layout of the program?
+    i)   Text Segment
+	ii)  Initialized data segment
+	iii) Uninitialized data segment(bss)
+	iv)  Heap
+	v)   Stack
+	
+50) Inline function in c++?
+
+    inlining is only a request to the compiler, not a command. compiler can ignore the request for inlining. compiler may not perform inlining in such circumstances like.
+	
+	i)   If a function contains a loop.
+	ii)  If a function contains static variable.
+	iii) If a function is recursive.
+	iv)  If function return type is other than void, and the return statement doesn't exist in function body.
+	
+	Advantages:
+	i)   Function call overhead doesn't occur.
+	ii)  It also saves the 
+    
+	
+
+	
+/////////////******* Exception Handling ************///////////////////////
+
+1) Exceptions : Exception handling provides a mechanism to decouple handling of errors or other exceptional circumstances from the typical control flow of your code. This allows more freedom to handle errors when and how ever is most useful for a given situation, alleviating most of the messiness that return code cause.
+ 
+2) Performance concerns
+
+Exceptions do come with a small performance price to pay. They increase the size of your executable, and they may also cause it to run slower due to the additional checking that has to be performed. However, the main performance penalty for exceptions happens when an exception is actually thrown. In this case, the stack must be unwound and an appropriate exception handler found, which is a relatively expensive operation.
+
+As a note, some modern computer architectures support an exception model called zero-cost exceptions. Zero-cost exceptions, if supported, have no additional runtime cost in the non-error case (which is the case we most care about performance). However, they incur an even larger penalty in the case where an exception is found.
+
+
+Introduction to program_defined (User defined):
+
+ Enumerators are descriptive, they are useful for enhancing code documentation and readability. Enumerated types are best used when you have a smallish set of related constants, and objects only need to hold one of those values at a time.
+ 
+
+Avoiding Enumerator naming collisions?
+There are quite a few common ways to prevent unscoped enumerator naming collision. one option is to prefix each enumerator with the name of the enumeration itself.
+
+enum color
+{
+   color_red,
+   color_blue,
+   color_green,
+};
+
+enum Feeling
+{
+  feeling_happy,
+  feeling_tired,
+  feeling_blue, // no longer has a naming collision with color_blue.
+}
+
+
+What is an aggregate?
+
+In general programming, an aggregate data type is any type that can contain multiple data members. some types of aggregates allow members to have different types, while others require that all members must be of a single type.
+
+const structs ?
+
+variables of a struct type can be const and just like all const variables, they must be initialized.
+
+
+
+Unscoped enumerations:
+
+Unscoped enumerations are defined via the enum keyword.
+
+Enumerated types are best taught by example, so let's define unscoped enumeration that can hold some color values. 
+
+// Define a new unscoped enumeration named Color
+enum Color
+{
+    // Here are the enumerators
+    // These symbolic constants define all the possible values this type can hold
+    // Each enumerator is separated by a comma, not a semicolon
+    red,
+    green,
+    blue, // trailing comma optional but recommended
+}; // the enum definition must end with a semicolon
+
+int main()
+{
+    // Define a few variables of enumerated type Color
+    Color apple { red };   // my apple is red
+    Color shirt { green }; // my shirt is green
+    Color cup { blue };    // my cup is blue
+
+    Color socks { white }; // error: white is not an enumerator of Color
+    Color hat { 2 };       // error: 2 is not an enumerator of Color
+
+    return 0;
+}
+
+We start our example by using the enum keyword to tell the compiler that we are defining an unscoped enumeration which we've named color.
+
+Inside a pair of curly braces, we define the enumerators for the color type: red, green, and blue. 
+
+ i)  An enumeration or enumerated type is the program-defined type itself.
+ ii) An enumerator is a symbolic constant that is a possible value for a  given enumeration.
+ 
+ 
+Naming enumerations and enumerators:
+
+Name your enumerated types starting with a capital letter. Name your enumerators starting with a lower case letter.
+
+Enumerated types are distinct types:
+
+Each enumerated type you create is considered to be a distinct type, meaning the compiler can distinguish it from other types. enumerators defined as part of one enumerated type can't be used with objects of another enumerated type.
+
+putting enumerations to use?
+
+enumerators are descriptive, they are useful for enhancing code documentation and readability. Enumerated types are best used when you have a smallish set of related constants, and objects only need to hold one of those values at a time.
+
+The scope of unscoped enumerations
+
+Unscoped enumerations are named such because they put their enumerator names into the same scope as the enumeration defination itself.
+
+enum Color // this enum is defined in the global namespace
+{
+    red, // so red is put into the global namespace
+    green,
+    blue,
+};
+
+int main()
+{
+    Color apple { red }; // my apple is red
+
+    return 0;
+}
+
+
+The Color enumeration is defined in the global scope. Therefore, all the enumeration names (red, green, and blue) also go into the global scope. This pollutes the global scope and significantly raises the chance of naming collisions.
+
+One consequence of this is that an enumerator name can’t be used in multiple enumerations within the same scope:
+
+enum Color
+{
+    red,
+    green,
+    blue, // blue is put into the global namespace
+};
+
+enum Feeling
+{
+    happy,
+    tired,
+    blue, // error: naming collision with the above blue
+};
+
+int main()
+{
+    Color apple { red }; // my apple is red
+    Feeling me { happy }; // I'm happy right now (even though my program doesn't compile)
+
+    return 0;
+}
+
+
+
+Note : prefer putting your enumerations inside a named scope region so the enumerators don't pollute the global namespace.
+
+
+comparing against enumerators:
+
+we can use the equality operators (operator== and operator!=) to test whether an enumeration has the value of a particular enumerator or not.
+
+#include <iostream>
+
+enum Color
+{
+    red,
+    green,
+    blue,
+};
+
+int main()
+{
+    Color shirt{ blue };
+
+    if (shirt == blue) // if the shirt is blue
+        std::cout << "Your shirt is blue!";
+    else
+        std::cout << "Your shirt is not blue!";
+
+    return 0;
+}
+
+
+Avoid assigning explicit values to your enumerators unless you have a compelling reason to do so.
+
+
+integer to unscoped enumerator conversion
+While the compiler will implicitly convert unscoped enumerators to an integer, it will not implicitly convert an integer to an unscoped enumerator. 
+
+#include <iostream>
+
+enum Pet
+{
+    cat, // assigned 0
+    dog, // assigned 1
+    pig, // assigned 2
+    whale, // assigned 3
+};
+
+int main()
+{
+    Pet pet { 2 }; // compile error: integer value 2 won't implicitly convert to a Pet
+    pet = 3;       // compile error: integer value 3 won't implicitly convert to a Pet
+    
+	Pet pet { static_cast<Pet>(2) }; // convert integer 2 to a Pet
+    pet = static_cast<Pet>(3);       // our pig evolved into a whale!
+    return 0;
+}
+
+econd, in C++17, if an unscoped enumeration has a specified base, then the compiler will allow you to initialize (but not assign) an unscoped enumeration using an integral value:
+
+#include <iostream>
+
+enum Pet: int // we've specified a base
+{
+    cat, // assigned 0
+    dog, // assigned 1
+    pig, // assigned 2
+    whale, // assigned 3
+};
+
+int main()
+{
+    Pet pet { 2 }; // ok: can initialize with integer
+    pet = 3;       // compile error: can not assign with integer
+
+    return 0;
+}
+
+
+Scoped enumerations :
+
+That solution is the scoped enumeration work similarly to unscoped enumerations but have two primary differences
+
+ i) They are strongly typed(they won't implicitly convert to integers) and strongly scoped(the enumerators are only placed into the scope region of the enumeration).
+
+  To make a scoped enumeration, we use the keywords enum class. the rest of the scoped enumeration defination is the same as an unscoped enumeation defination.
+
+  #include <iostream>
+int main()
+{
+    enum class Color // "enum class" defines this as a scoped enumeration rather than an unscoped enumeration
+    {
+        red, // red is considered part of Color's scope region
+        blue,
+    };
+
+    enum class Fruit
+    {
+        banana, // banana is considered part of Fruit's scope region
+        apple,
+    };
+
+    Color color { Color::red }; // note: red is not directly accessible, we have to use Color::red
+    Fruit fruit { Fruit::banana }; // note: banana is not directly accessible, we have to use Fruit::banana
+
+    if (color == fruit) // compile error: the compiler doesn't know how to compare different types Color and Fruit
+        std::cout << "color and fruit are equal\n";
+    else
+        std::cout << "color and fruit are not equal\n";
+
+    return 0;
+}
+
+Scoped enumerations define their own scope regions
+
+Unlike unscoped enumerations, which place their enumerators in the same scope as the enumeration itself, scoped enumerations place their enumerators only in the scope region of the enumeration. In other words, scoped enumerations act like a namespace for their enumerators. This built-in namespacing helps reduce global namespace pollution and the potential for name conflicts when scoped enumerations are used in the global scope.
+
+Scoped enumerations don’t implicitly convert to integers
+
+#include <iostream>
+int main()
+{
+    enum class Color
+    {
+        red,
+        blue,
+    };
+
+    Color shirt { Color::red };
+
+    if (shirt == Color::red) // this Color to Color comparison is okay
+        std::cout << "The shirt is red!\n";
+    else if (shirt == Color::blue)
+        std::cout << "The shirt is blue!\n";
+		
+	std::cout << color << '\n'; // won't work, because there's no implicit conversion to int
+    std::cout << static_cast<int>(color) << '\n'; // will print 1
+
+    return 0;
+}  
+
+
+
+Easing the conversion of scoped enumerators to integers
+
+scoped enumerations are great, but the lack of implicit conversion to integer can sometimes be a pain point. If we need to convert a scoped enumeration to integer often having to use static_cast every time we want a conversion can clutter our code significantly.
+
+
+
+using enum statements c++20 
+
+using enum statement imports all of the enumerators from an enum into the current scope. when used with an enum class type, this allow us to access enumerators without having to prefix each with the name of the enum class.
+
+#include <iostream>
+#include <string_view>
+
+enum class Color
+{
+    black,
+    red,
+    blue,
+};
+
+constexpr std::string_view getColor(Color color)
+{
+    using enum Color; // bring all Color enumerators into current scope (C++20)
+    // We can now access the enumerators of Color without using a Color:: prefix
+
+    switch (color)
+    {
+    case black: return "black"; // note: black instead of Color::black
+    case red:   return "red";
+    case blue:  return "blue";
+    default:    return "???";
+    }
+}
+
+int main()
+{
+    Color shirt{ Color::blue };
+
+    std::cout << "Your shirt is " << getColor(shirt) << '\n';
+
+    return 0;
+}
+
+
+
+1) Defining structs ?
+
+   Because structs are a program-defined type, we first have to tell the compiler what our struct type looks like before we can begin using it.
+   
+2) struct data members are not initialized by default?
+
+   #include <iostream>
+
+	struct Employee
+	{
+		int id; // note: no initializer here
+		int age;
+		double wage;
+	};
+
+	int main()
+	{
+		Employee joe; // note: no initializer here either
+		std::cout << joe.id << '\n';
+
+		return 0;
+	}
+
+3) what is an aggregate?
+
+   an aggregate data type is any type that can contain multiple data members. 
+   
+   
+4) Designated initializers?
+
+   When initializing a struct from a list of values, the initializers are applied to the members in order of declaration.
+   
+   struct Foo
+   {
+     int a {};
+	 int c {};
+   };
+   int main()
+   {
+     Foo f {1,3};
+   }
+   
+    Now consider what would happen if you were add a new member to your struct that is not the last member.
+	
+	struct Foo
+	{
+		int a {};
+		int b {}; // just added
+		int c {};
+	};
+
+	int main()
+	{
+		Foo f { 1, 3 }; // now, f.a = 1, f.b = 3, f.c = 0
+	}
+	
+	Now all your initialization values have shifted, and worse the compiler may not detect this as an error.
+	
+	To avoid this, c++20 adds a new way to initialize struct members called designated initializers. Designated initializers allow you to explicitly define which initialization values map to which members.
+	
+	struct Foo
+	{
+		int a{ };
+		int b{ };
+		int c{ };
+	};
+
+	int main()
+	{
+		Foo f1{ .a{ 1 }, .c{ 3 } }; // ok: f.a = 1, f.b = 0 (value initialized), f.c = 3
+		Foo f2{ .b{ 2 }, .a{ 1 } }; // error: initialization order does not match order of declaration in struct
+
+		return 0;
+	}
+	
+	
+
+5) Class template argument deduction (CTAD) and deduction guides?
+
+   when instantiating an object from a class template, the compiler can deduce the template types from the types of the object's initializer.
+   
+   Example : std::pair<int, int> p1{ 1, 2 }; // c++11
+             std::pair p2{ 1, 2 }; // c++17
+
+    CTAD is only performed if no template argument list is present. Therefore, both of the following are errors:
+
+    #include <utility> // for std::pair
+	int main()
+	{
+		std::pair<> p1 { 1, 2 };    // error: too few template arguments, both arguments not deduced
+		std::pair<int> p2 { 3, 4 }; // error: too few template arguments, second argument not deduced
+
+		return 0;
+	}	
+	
+	
+	you may be surprised to find that the following program doesn't compile in c++ 17
+	
+	template<typename T, typename U>
+	struct pair
+	{
+	  T first{};
+	  U second{};
+	};
+	int main()
+	{
+	  Pair<int, int> p1{ 1, 2 };//OK: we're explicitly specifying the template arguments
+	  Pair p2{ 1, 2 };           // compile error in C++17	  
+	}
+
+
+1) storage classes ?
+
+2) multithreading ?
+
+
+3) smart pointer, custom deleter ?
+
+4) new , malloc ?
+
+
+greeks for greeks 
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	

@@ -1,0 +1,95 @@
+
+
+Quality Assurance :
+	“Activities focused on providing confidence that quality requirements will be fulfilled.”
+
+Quality:
+	Quality assurance is about ensuring that development processes are correct and complete and the deployed product fulfills customer requirements.
+
+
+Why good Quality?
+
+	Neglecting quality assurance will impact the end user.
+	Teams that fail to adequately test their product can lose time, money, and customers
+
+
+Quality Attributes:
+	Functionality
+		 How well the application is working according to its specifications
+	Availability
+		Amount of time the application is available to users, fully functional
+	Performance
+		How quickly and accurately the application completes required functions.
+	Testability
+		How easily developers and testers can test the application
+	Security
+		Security features and requirements necessary to protect company and user data—from possible breaches or catastrophic losses.
+	Usability
+		How easy is the application to use
+	Reliability
+		 Application's capacity to continue operating under specified conditions for a certain amount of time.
+
+
+
+Benifits of Tetsing:
+	Product Quality:
+		Quality of product will be better with less defects to the end user
+	User Experience 
+		user will have better experience with better testing in place and less bugs
+
+
+
+Types of testing:
+	Manual testing
+		Peformed manually by test engineer
+		Need expertise as done manually without any tools
+		Disadvantages: 	Time consuming, Boring, repetitive
+		Advantages: Low cost, flexibility, can test few things that'c cant be done my Automation
+
+	Automation testing:
+		Done using specific set of tools and automated scripts 
+		Easy to run as most of the part is automated
+		Disadvantages: Costly, too much dependency on automation tools, Need expertise and may not suit for all type sof testing
+		Advantages:Savings on Longterm, ability to run tests in parallel, easily repeatable several times quickly
+
+	Functional Testing:
+		used to test if the application is meetings the client requirements with respect to the functionality
+		It can be manual or Automated
+
+	Non Functional testing:
+		It concentrates on operational qualities rather than behavioural qualities.
+		In simple words : It defines "How the system will do" and not "what the system will do"
+		Tetsing includes the testing of : Realiablity, Usability, Performance
+		Automation is best for this type of tetsing
+
+Testing Methods:
+	WhiteBox testing:	
+		Testing based on an analysis of the internal structure of the component or system
+	Black box testing:
+		This testing is focused only on the interface and does not test the internal structure of the software.
+	Grey box testing:
+		It is a hybrid of white box and black box testing that requires engineers to have access to the database and design documentation
+		Grey box testing provides a more user experience–centered test.
+		
+
+Test Plan : 
+	This should be part of dcoumentation that a team maintains for testing. Test plan shoud include
+		A project-specific impact on testing
+		The scope of testing
+		Quality and acceptance criteria
+		The test team, test schedule, and test deliverables
+	
+
+Test Strategy : 
+	While the test plan focuses on the “what” and the “when” of testing, the test strategy addresses the “how.” Test strategy should include
+		How the team will organize testing
+		Which testing types will be in scope to address product risks
+		Which test design and execution approaches the team will use for a particular testing type
+		
+		
+
+	
+		
+		 	
+		
+			

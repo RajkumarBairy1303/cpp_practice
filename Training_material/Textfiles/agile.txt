@@ -1,0 +1,78 @@
+1) What is an Agile Methdology?
+
+    Agile is a value driven approach to developing solutions. It is focused on people, adaptability and providing maximum value to customers.
+	
+2) Elements of Agile Development?
+
+   The Agile philosophy emphasizes quick releases, flexible planning, sustainable development, continuous attention to good design, and on going feedback from users. agility empowers your team to experiment and adapt to change quickly.
+   
+   
+3) what are the Agile Mindset?
+
+   A set of attitudes and ways of thinking that support agile practices- enables independence, creativity, and innovation. It is the foundation that empowers average teams to transform into high-performing agile teams. 
+   
+   i) put customer first : People with an agile mindset focus on delivering value to customers rather than prioritizing shareholders and generating revenue.
+   ii) Trust in the team: Rather than preferring to work within siloed departments and processes, team members with an agile midset value autonomy and are comfortable working in a self managed team.
+   iii) Emphasize Experimentation : with an agile mindset, people value creativity and look for opportunities to experiment and innovate. 
+   
+4) What are the agile values?
+
+    i)   Individuals and interactions over processes and tools.
+	ii)  Working software over comprehensive documentation.
+	iii) customer collaboration over contract negotiation.
+	iv) Responding to change over following plan.
+	
+5) what is the traditional waterfall model?
+
+   The waterfalll development approach is to work sequentially from start to finish. Clients typically see results at the end of the project life cycle.If there are errors or defects, the team has to work beckward to address and correct them.
+   
+    i)   Requirments
+	ii)  Design
+	iii) Develop
+	iv)  Test
+	v)   Deploy
+	
+	
+6) what are the Agile focus Areas?
+
+   The Agile methodology seeks to streamline project work by focusing on three key areas: adaptability, user experience and testing.
+   
+
+7) what are the waterfall advantages or when we can prefer waterfall model?
+
+   Despite its drawbacks, there are times when a waterfall approach may still be the preferred approach, including when:
+
+	i)   The project/requirements/customer demand is not prone to change
+	ii)  The project is small in scope
+	iii) The speed of delivery is not a priority
+	
+8) what is scrum ?
+
+   Scrum is a framework that unites business and development. It focuses on teams delivering products of the highest value while also being productive and efficient.
+   
+
+9) How to implement the scrum framework?
+
+   Implementing the scrum framework means adhering to short, timeboxed iterations called sprints.
+   
+   During each Sprint, teams participate in multiple events. Daily Scrums - brief check-ins that occur each day- enable team members to assess how successfully they are moving toward the sprint goal.
+   
+   i) Sprint Planning: an event when all team members initiate the Sprint by laying out the work to perform.
+   ii) Sprint review : a timeboxed working session when the team and key stakeholders review the outcomes of a sprint and identify the future steps.
+   iii) Sprint Retrospective: an event when team members discuss what went well, what could be improved, and commit to improvements in the next sprint.
+   
+10) what are three pillars of Scrum?
+    
+	i)   Transparency
+	ii)  inspection
+	iii) adaptation
+   
+
+
+
+
+
+
+
+
+

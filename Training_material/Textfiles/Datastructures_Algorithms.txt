@@ -1,0 +1,165 @@
+
+1) What is Datastructure and Algorithms ?
+
+   Datastructure is a way of collecting and organising data in such a way that we can perform operations on these data in an effective way.
+   
+2) what is an algorithm ?
+
+   An algorithm is finite set of instructions or logic, written in order to accomplish a certain predefined task.
+   
+   An algorithm is said to be efficient and fast, If it takes less time to execute and consumes less memory space. The performance of an algorithm is measured on the basis of following properties.
+   
+    i)  Time complexity
+	ii) space complexity.
+	
+3) Tyeps of Asymptotic Notations ?
+
+   We use three types of asymptotic notations to represent the growth of any algorithm
+   
+     i)   Big Theta : The average value or range within which the actual time of execution
+     ii)  Big Oh : Worst case of an algorithm
+     iii) Big Omega	: the best case of an algorithm.
+	 
+3) what is Linear search ?
+
+   In Linear search, we earch an element or value in given array by traversing the array from the starting. till the desired element or value is found.
+   
+   Linear search algoritnm is O(n)
+   
+4) what is Binary Search ?
+
+    Binary search is applied on the sorted array or list of large list. It's time complexity of O(log n) makes it very fast as compared to other sorting algorithm.
+
+5) what is jump search algorithm?
+   
+   This search can be done by skipping some fixed number of array elements or jumping ahead by fixed number of steps in evry iteration.   
+	
+   Time complexity O(root n)
+   space completxity O(1)
+   
+   Advantages: It is faster than linear search technique which has a time complexity of O(n) for searching an element.
+   
+   Disadvantage: It is slower than binary algorithm which searches an element in O(log n);
+   
+6) what is Bubble sort ?
+
+   Bubble sort is a simple algorithm which is used to sort given set of n elements provided in form of an array with n number of elements. Bubble sort compares all the elements one by one and sort them based on their values.
+   
+   If the given array has to be sorted in ascending order, then bubble sort will start by comparing the first element of the array with the second element, if the first element is greater than the second element, it will swap both the elements, and then move on to compare the second and the third element, and so on.
+
+	If we have total n elements, then we need to repeat this process for n-1 times.
+
+	It is known as bubble sort, because with every complete iteration the largest element in the given array, bubbles up towards the last place or the highest index, just like a water bubble rises up to the water surface.
+	
+	 i)   Worst case Time complexity [Big - O]: O(n2)
+     ii)  Best case time complexity  [Big - omega]:O(n)
+     iii) Average Time complexity [Big-Theta] - O(n2)
+     iv) space complexity : O(1)
+
+7) what is Insertion sort ?
+    
+	Following are the steps involved in insertion sort:
+
+	We start by making the second element of the given array, i.e. element at index 1, the key. The key element here is the new card that we need to add to our existing sorted set of cards(remember the example with cards above).
+	We compare the key element with the element(s) before it, in this case, element at index 0:
+	If the key element is less than the first element, we insert the key element before the first element.
+	If the key element is greater than the first element, then we insert it after the first element.
+	Then, we make the third element of the array as key and will compare it with elements to it's left and insert it at the right position.
+	And we go on repeating this, until the array is sorted.
+
+     i)   Worst case Time complexity [Big - O]: O(n2)
+     ii)  Best case time complexity  [Big - omega]:O(n)
+     iii) Average Time complexity [Big-Theta] - O(n2)
+     iv)  space complexity : O(1)
+
+8) what is selection sort ?
+
+    Selection sort is conceptually the most simplest sorting algorithm. This algorithm will first find the smallest element in the array and swap it with the element in the first position, then it will find the second smallest element and swap it with the element in the second position, and it will keep on doing this until the entire array is sorted.
+
+	It is called selection sort because it repeatedly selects the next-smallest element and swaps it into the right place.
+	
+	Following are the steps involved in selection sort(for sorting a given array in ascending order):
+
+	1) Starting from the first element, we search the smallest element in the array, and replace it with the element in the first position.
+	2) We then move on to the second position, and look for smallest element present in the subarray, starting from index 1, till the last index.
+	3) We replace the element at the second position in the original array, or we can say at the first position in the subarray, with the second smallest element.
+	4) This is repeated, until the array is completely sorted.
+	
+	 i)   Worst case Time complexity [Big - O]: O(n2)
+     ii)  Best case time complexity  [Big - omega]:O(n2)
+     iii) Average Time complexity [Big-Theta] - O(n2)
+     iv)  space complexity : O(1)
+	
+9) Merge sort Algorithm?
+   merge sort follows the rule of Divide and conquer to sort a given set of numbers/elements, recursively, hence consuming less time.
+   
+   In Merge sort, the given unsorted array with n elements, divided into n subarrays, each having one element, because a single element is always sorted in itself. then it repetedly merges these subarrays, to produce new sorted subarrays, and in the end, one complete sorted is produced.
+   
+     i)   Worst case Time complexity [Big - O]: O(n*log n)
+     ii)  Best case time complexity  [Big - omega]:O(n*log n)
+     iii) Average Time complexity [Big-Theta] - O(n*log n)
+     iv)  space complexity : O(n)
+	 
+10) Quick sort ?
+
+    Quick sort is based on the concept of divide and conquer, just like merge sort. But in qucik sort all the heavy lifting is done while dividing the array into subarrays, while in case of merge sort all the real work happens during merging the subarrays.
+	
+	How quick sort working:
+	
+	i)  After selecting an element as pivot, which is the last index of the array in our case, we divide the array for the first time.
+	ii) In quick sort, we call this partitioning. It is not simple breaking down of array into 2 subarrays, but in case of partitioning, the array elements are so positioned that all the elements smaller than the pivot will be on the left side of the pivot and all the elements greater than the pivot will be on the right side of it.
+	iii) And the pivot element will be at its final sorted position.
+	iv)  The elements to the left and right, may not be sorted.
+	 v)  Then we pick subarrays, elements on the left of pivot and elements on the right of pivot, and we perform partitioning on them by choosing a pivot in the subarrays.
+	
+	 i)   Worst case Time complexity [Big - O]: O(n2)
+     ii)  Best case time complexity  [Big - omega]:O(n*log n)
+     iii) Average Time complexity [Big-Theta] - O(n*log n)
+     iv)  space complexity : O(n*log n)
+   
+10) Heap Sort Algorithm ?
+
+   Heap is a special tree based data structure, that satisfies the following special heap properties.
+   
+   shape property: Heap data structure is always a complete Binary tree, which means all levels of the tree are fully filled.
+   
+   Heap Property: All nodes are either greater than or equal to or less than or equal to each of its children. If the parent nodes are greater than their code nodes, heap is called a max-Heap, and if the parent nodes are smaller than their child nodes, heap is called Min-Heap.
+   
+   How heap sort works :
+   
+   creating a heap of the unsorted list/array.
+   Then a sorted array is created by repeatedly removing the largest/smallest element from the heap, and inserting it into the array. The heap is reconstructed after each removal.
+	
+	
+	 i)   Worst case Time complexity [Big - O]: O(n*log n)
+     ii)  Best case time complexity  [Big - omega]:O(n*log n)
+     iii) Average Time complexity [Big-Theta] - O(n*log n)
+     iv)  space complexity : O(1)
+	
+12) What is stack Data structure ?
+
+    stack is an abstrct data type with a bounded capacity. It is a simple data structure that allows adding and removing elements in a particular order. stack is a LIFO(Last in first out) or we can say FILO(First in Last out).
+	
+	Push Operation : O(1)
+	Pop Operation : O(1)
+	Top Operation : O(1)
+	Search Operation : O(n)
+	
+13) what is Queue Data structure ?
+
+    Queue is also an abstract data type or a linear data structure, just like stack data structure, in which the first element is inserted from one end called the REAR(also called tail), and the removal of existing element takes place from the other end called as FRONT(also called head). 
+	
+	This makes queue as FIFO (First in First Out) data structure, which means that element inserted first will be remvoed first.
+	
+	The process to add an element into queue is called Enqueue and the process of removal of an element from queue is called Dequeue.
+	
+	insertion: O(1)
+	deletion: O(1)
+	access/search : O(n)
+	Size: O(1)
+	
+14) what is a graph ?
+
+    A graph is an advanced data structure that is used to organize items in an interconnected network. Each item in a graph is known as a node and these nodes are connected by edges.
+	
+	

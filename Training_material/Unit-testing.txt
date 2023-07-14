@@ -1,0 +1,65 @@
+
+Definition
+	A unit test checks the functionality of the smallest testable elements of an application
+	A collection of unit tests makes up a test suite.
+
+Who should write
+	A unit tests must be written and updated by the same developers who write and adjust the application code.
+
+When should we write
+	Unit tests must be written at the same time as the main code. This timing makes the code loosely coupled and testable, and it pushes developers to think through edge cases
+
+When to execute
+	Unit testing should be executed as early as possible. First on local machine, second in the CI pipeline 
+	
+How long it should take to run test suite 
+	It should take seconds to run the whole unit test suite, allowing your team to regularly execute testing without slowing down the development process.	
+
+Do we need application to run unit-tests
+	A unit test does NOT require running an application. we can perform unit-tests from (IDE) or a command line without the need to execute the application as a whole.
+
+Why we need unit tests as part of CI
+	Because this will help the whole team understand if the tests fails as no one knows if they fail on developer machine
+
+
+Benifits of unit-testing
+	More confidence to change the code. A unit test can be used to verify the new code we added to existing code more confidently
+	We will have a better understanding of functionality
+	Better design as we try to separete code as much as possible just to implement unit-testing
+
+Disadvantages of not having unit-tests
+	77% of failures can be re produced by unit-tests
+	
+Testing pyramid
+	This is a triangle with unit-tests on the base and integration tests next and then the UI tests
+	X Axis: Numbe of unit tests
+	Y Axis: Scope, Time, Cost 
+	As the no of tests increases, the scope, time and cost increases
+	No of tests are more for unit tests but scope and time and cost are less
+
+------------------unit tests vs Integration tests---------------------------------------
+
+Focus on one specific piece of the system in isolation
+	Focus on the interaction between the units, modules, or components
+
+
+Have no external dependency―any external dependency is mocked or stubbed out
+	Often require interaction with external dependencies, such as databases, network services, hardware, etc.
+
+
+Are comparable to checking whether a mobile phone battery is alive or whether the SIM card is activated (individual functionality)
+	Are comparable to checking whether a mobile phone battery and SIM card are assembled to start the phone
+	
+
+
+Principles of good unit-testing (FIRST)
+Fast- They should run very fast. A whole suite of unit tests should take seconds to run so that developers can frequently run else they might neglect
+Independent - Tests should not be dependent on each other. One test should not set the conditions for the next one. 
+Repeatable - Tests should be repeatable in any environment, developer should be able to successfully run the tests on the production, QA or any other environment
+Self-Validating - Tests should have a Boolean output and either pass or fail. Example :  You should not have to read through a log file or manually compare two text files to determine if a test passes or fails
+Timely - Unit tests should be written in a timely manner―before or at the same time as the production code
+
+
+
+
+

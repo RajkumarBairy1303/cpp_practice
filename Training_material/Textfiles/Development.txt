@@ -1,0 +1,269 @@
+Development
+
+Code Quality Fundamentals : 
+  
+  Identifying and estimating code quality requires you to consider two aspects of code: what it does and how it looks.
+
+  i) Fundamental code quality : 
+  
+		Functional code quality means following or meeting functional requirements. It’s about what the code does.
+
+		Activities that ensure functional code quality include unit testing and functional testing.  
+		
+  ii) Structural Code quality : 
+  
+      Structural code quality means adhering to project-specific guidelines, minimizing unnecessary details, and maintaining clean code. It’s about how the code looks.
+
+	  Activities that ensure structural code quality include static code analysis and code review.
+
+2) characterstics of structural code quality ?
+
+    i)   Clear :
+	     While your code might seem understandable to you, it’s important to keep other contributors in mind to ensure the project goes smoothly. Maintaining and extending code is simpler when it is easy to understand.
+		 
+	ii)  Easy to maintain : 
+	     The code is simple and clean, which makes it easy for others to edit and maintain it.
+		 
+	iii) Follows project guidelines
+	     Keeping everyone on the same page saves time and resources for any project. These guidelines should be created at the start of the project and kept in a place where your team can easily find and use them.
+	  
+	iv)  Testable:
+	     Testable code is code that's written so that it can be verified independently. Developers should be able to write automated tests that demonstrate the behaviors they want to verify.
+
+		Such code should consist of small, functionally independent behaviors that make up a system. Otherwise, a task to cover code with readable tests may become difficult or even impossible.
+
+3) Benefites of code quality ?
+
+    i)   Code quality ensures the code is easy to edit, which saves time for developers on your team.
+    ii)  Enhancing code quality reduces the number of defects in a project.
+	iii) High-quality code functions properly.
+    iv)  Code quality makes it easier for new developers to join a project. They will be able to save time and effort if the code is easy to 	  
+	     understand.
+		 
+4) Disadvantages of code quality ?
+
+	i)   When the quality of code is poor, it takes more time and effort to understand, and it can lead to incorrect implementation of changes.
+	ii)  Poor code quality can result in more time and effort to implement new features.
+	iii) Poorly written code might need to be rewritten.
+	iv)  Poor code quality leads to more defects.
+	
+	
+5) Code quality metrics ?
+
+   Сode quality metrics are a set of software metrics that help developers better understand the code they're writing.
+
+    i) Cyclomatic complexity : The Cyclomatic complexity is a quality metric that measures the structural complexity of code. It refers to the number of decisions in the source code. The higher the cyclomatic complexity, the more complex the code.
+
+    ii) Class coupling : The Class coupling measures how many classes a single class uses. The lower the value, the better. Good software design requires low coupling; designs with high coupling are difficult to reuse and maintain.
+   
+   iii) Class hierarchy, or a depth of inheritance tree (DIT): It measures the complexity of the class hierarchy in object-oriented programming. It shows how object classes are derived from other classes. The higher the DIT, the more complex the software.
+   
+   iv) Code duplication : It refers to a sequence of source code that appears more than once, either within a program or across different programs. Duplicate code is considered undesirable as it is more difficult to maintain. If such code requires updating, there is a risk that one copy of the code will be modified without checking for other instances of the same code sequence.
+   
+   v) Method cohesion: It has to do with methods written within a class. A method should explicitly state why it is written. Otherwise, it lacks cohesion. High cohesion means that methods of the class are codependent and form a logical whole, whereas low cohesion results in huge classes that are difficult to understand and maintain.
+   
+   
+6) Best Practices for Code Quality
+
+	i) Develop coding standards as a set of guidelines, best practices, programming styles, and dos and don’ts that all developers adhere to when writing source code.
+	ii) Update the knowledge base to have an up-to-date dedicated section for coding standards.
+	iii)Include coding standards in the onboarding guide studied by each newcomer.
+	iv) Utilize static code analysis tools and code style checkers to enforce coding standards.
+	v) Create an extended rule set for your static code analysis tool in addition to the default rule settings.
+	vi) Identify when code quality is insufficient by having quality gates during static code analysis execution on continuous integration (CI).
+	vii) Maintain the CI process by making sure the quality gates based on static code rules are not broken.
+	viii) Measure code quality metrics (e.g., cyclomatic complexity, coupling, class hierarchy, code duplication, method cohesion).
+	ix)Identify whether code quality is lower than necessary for each quality metric.
+	
+	
+
+Unit Testing :
+
+1) What does a unit check ?
+
+    A unit test checks the functionality of the smallest testable elements of an application―classes and functions―which allows developers to spot the failure and isolate it. Unit tests prove that given some input, the function returns the expected output. A collection of unit tests makes up a test suite. 
+	
+2) who is responsble to write unit test cases ?
+
+    The unit tests must be written and updated by the same developers who write and adjust the application code. Unit testing is most beneficial for developers because once the test suite runs, they receive autogenerated, rapid feedback on their work.	
+	
+3) When should your team write unit tests ?
+
+   Unit tests must be written at the same time as the main code. This timing makes the code loosely coupled and testable, and it pushes developers to think through edge cases (those that occur only at extreme operating parameters).
+   
+4) when should you execute the unit tests ?
+
+   Unit tests are the first level of software testing and should be executed as early as possible—first, on a local developer workstation once any logically completed piece of code is implemented; second, in the Continuous Integration (CI) pipeline once code is pushed.
+	
+5) How long does it take to run a unit test suite ?
+
+   It takes seconds to run the whole unit test suite, allowing your team to regularly execute testing without slowing down the development process.
+   
+6) Does a unit test require running the application ?
+   
+   A unit test does NOT require running an application. Your team can perform unit testing easily in an integrated development environment (IDE) or a command line without the need to execute the application as a whole.
+   
+7) Why should you make unit testing a part of the Continues Integration (CI) Pipeline ?
+
+   As a part of the CI pipeline, unit testing can provide immediate feedback to the whole project team in case an author on your team misses the failure in the local environment.
+   
+8) Benefites of unit test cases ? 
+
+    i)   More Confident in changing code
+	ii)  A better understanding of component functionality
+	iii) Better design
+	
+	
+9) The Base of the Testing pyramid ?
+
+    i)   user interface Tests 
+	ii)  Integration Tests
+	iii) Unit Tests
+	
+	
+10) Unit Tests	                                                       Integration Tests
+	Focus on one specific piece of the system in isolation	              Focus on the interaction between the units, modules, or components
+	Are easier to write, faster to execute, and cheaper to maintain	      Are more complex, slower to run, and more expensive to maintain
+	Verify internal consistency of code that you have complete            Verify how your code integrates with some other code
+	control over	
+	Have no external dependency―any external dependency 	              Often require interaction with external dependencies, such as databases, network services, is mocked or stubbed out                            hardware, etc.
+	Let you know the exact piece of code where the error is	              Indicate which modules/components contain the error
+	Are comparable to checking whether a mobile phone battery 	          Are comparable to checking whether a mobile phone battery and SIM card are assembled is alive or whether the SIM card is activated               to start the phone
+	
+	
+11) principles of Good Unit Testing ?
+
+    F . I . R. S. T
+	
+	F - Fast        : The Test should be run faster
+	I - Independent : The test shouldn't dependent on each Other.  
+    R - Repetable   : Tests should be repeatable in any environment.
+	S - Self-Validating : 
+	T - Timely      : Unit tests should be written in a timely manner―before or at the same time as the production code
+	
+	
+	
+Code Review : 
+
+      Code review is a systematic software engineering practice that a software development team performs to improve code quality by finding and fixing bugs. Although the code review process can be challenging, it ensures the quality of your team’s code.
+	  
+1) what are the key benefits of Code review ?
+
+    i) Fewer Defects : 
+	     It is often easier for a reviewer with an outside perspective to identify structural errors (e.g. dead code, logic or algorithm bugs, performance or architecture concerns, etc.) and functional errors (when code does not work as expected).
+    ii) Knowledge sharing:
+	     
+		  The valuable knowledge your team shares during the code review process primarily relates to the functionality of a specific application, its domain, and its business logic. It also covers coding best practices, including optimization and refactoring techniques.
+		  
+	 iii) Consistent standards :
+	       Code review ensures that your team members follow the agreed upon style guide. Consistency in a codebase makes code easier to read and understand, prevents bugs, and facilitates collaboration between regular and migratory developers. Legible code is more reusable, bug-free, and future-proof.
+	 iv)  Complience :
+	      Code review is a great way to avoid common technical traps.
+		  
+2) The Risks of Neglecting Code Review ?
+
+     i)   Lower strcutural code quality
+	 ii)  Lower functional code quality
+	 iii) Lack of knowledge sharing
+     iv)  Possible rework
+      v)   Possible technical issues	 
+	
+3) Code review types ?
+
+    i) Peer review :
+	
+	    Peer review allows several team members to review code at different times. Its convenience makes it a popular review type.
+	   
+	ii) Specialist's review :
+	    
+		 A specialist’s review is an example of a cross-team code review practice.
+		 
+	iii) Instant code review : 
+	
+	     Instant code review allows several team members to review code simultaneously. It is usually conducted as pair programming: when two team members write code and review it line by line.
+		 
+4) Key area's code review ?
+
+    i)    Functional correctness/Business logic
+	ii)   structural correctness/Design
+	iii)  Readability/complexity
+	iv)   Test correctness/Business
+	v)    Non-Functional hidden implications
+	
+	
+	
+	
+Knowledge Sharing
+
+1) Impacts of Unhealthy Knowledge Sharing ?
+
+   i)   Unclear Project priorities
+   ii)  Unclear Project standards
+   iii) Waste of project resources
+   iv)  Bus Factor
+   v)   Missing information
+   vi)  Ineffective Onboarding
+   
+2) Benefits of Healthy Knowledge Sharing ?
+
+   i)   A stable Team
+   ii)  Alignment Through Documented Standards
+   iii) Available Comprehensive Information
+   iv)  Smooth Onboarding
+   
+3) Improving Four Project Areas with Knowledge Sharing ?
+
+	i)	 Development process
+	ii)	 Knowledge base
+	iii) Onboarding procedures
+	iv)	 Team communication
+	
+	
+	
+Technical Debt :
+
+1) What is Technical Debt ?
+
+    Technical Debt is a concept of illustrate the implicit cost of further rework caused by implementation of an immediate simple solution over 
+	a better approach that could take longer.
+	
+2) what are the Benefits of Intentional Technical Debt ?
+
+   i) Meeting time to market deadline : The time-to-market period covers the time to generate the idea of a product and then design, develop, and 
+	  release it. Often a customer or client has strict release deadlines due to marketing events or important demos.
+
+	  In this type of situation, your team has to work quickly and may need to allow for minor code flaws (that don’t disrupt a successful release) to meet the deadline. These issues then become technical debt that your team addresses after the release.
+	  
+   ii) Creating POCs and MVPs : 
+		If your team prepares a Proof of Concept (POC) or a Minimum Viable Product (MVP) for a customer, you need to present the overall idea of how you will implement the solution. In this case, it’s okay if the code quality isn’t perfect.
+
+		Here, going into technical debt will save time, and there is no risk of harming the business. 
+		
+3) Delivery Indicators ?
+
+    i)   Quality Degradation :
+	     
+		  As technical debt accumulates, a system experiences an increase in the number of production, regression, and known issues
+		  
+		  Production issues are defects and production bugs.
+		  Regression issues appear because of side effects provoked by a defect in the old functionality. A team conducts regression testing before releasing a new build to production, and the existing technical debt influences the number of bugs they find during the testing. When a team makes changes in one part of the system, quality degradation leads to a situation when a defect or unexpected behavior might suddenly appear in another part of the system.
+		  Known issues are bugs that a team is aware of but that are considered non-critical and suitable for release. A list of known issues is often a sign that a team has technical debt they need to manage.
+	      
+	ii)  High Cost of system Change
+	iii) Inability to experment quickly
+	iv)  Increased barriers to entry
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
