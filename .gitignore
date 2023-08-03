@@ -4,3 +4,5 @@ bin/
 obj/
 Win32/
 Debug/
+x64/
+Release/
